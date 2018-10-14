@@ -28,11 +28,12 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Log In"
+            android:text="LOG IN"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textColor="@color/colorPrimary"
-            tools:text="Log In" />
+            android:textStyle="bold"
+            tools:text="LOGIN" />
 
         <Space
             android:layout_width="match_parent"
