@@ -2,10 +2,13 @@ package com.example.admin.loginguitest
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import com.example.admin.loginguitest.R.id.emailTextField
+import android.widget.Toast
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
 import java.sql.ResultSet
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -14,53 +17,63 @@ import kotlin.collections.ArrayList
 
 class LogIn_GUI : AppCompatActivity() {
 
-    lateinit var loginButton : Button
-    lateinit var emailTextField : TextView
-    lateinit var passwordTextField : TextView
-    lateinit var contClass : Controller
+    lateinit var loginButton        : Button
+    lateinit var emailTextField     : TextView
+    lateinit var passwordTextField  : TextView
+    lateinit var contClass          : Controller
+
+    private lateinit var fbAuth     : FirebaseAuth
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    companion object {
+        var TAG = "MainActivity"
+    }
+
+    public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in__gui)
-
-        //var dbCon = Connection_Test()
-        //dbCon.start()
 
         loginButton = findViewById(R.id.LogInButton) as Button
         emailTextField = findViewById(R.id.emailTextField) as TextView
         passwordTextField = findViewById(R.id.PasswordField) as TextView
 
-
+        fbAuth = FirebaseAuth.getInstance()
     }
 
     fun logInHandler(v : View){
 
-        var results : ResultSet? = null
 
         if(logInFieldsEmpty() == false){
             if(isEmailValid(emailTextField.text.toString()) == true){
 
-                //Shared_Resource.stmt = "Select * from \"public\".\"users\" where" +
-                //        " email like " + emailTextField.text + " and secret like " +
-                //        passwordTextField.text
-
-                //sS.start()
-
-                //while(Shared_Resource.finished != true){
-
-                //}
-
-                //results = Shared_Resource.rs
-
-
-                if(results != null)
-                    emailTextField.error = "Please enter valid credentials"
+                FireBaseSignIn(emailTextField.text.toString(), passwordTextField.text.toString());
             }
             else
                 emailTextField.error = "Please enter a valid email"
         }
 
+
+
+    }
+
+    private fun FireBaseSignIn(name : String, password : String){
+
+        fbAuth.signInWithEmailAndPassword(name, password).addOnCompleteListener(this) { task ->
+
+            if(task.isSuccessful){
+                val user = fbAuth.currentUser
+                Log.d(TAG, "signInWithEmail:success")
+                Toast.makeText(baseContext, "Success.",
+                        Toast.LENGTH_SHORT).show()
+            }
+            else{
+                Log.w(TAG, "signInWithEmail:failure", task.exception)
+                Toast.makeText(baseContext, "Authentication failed.",
+                        Toast.LENGTH_SHORT).show()
+
+            }
+
+        }
 
 
     }
