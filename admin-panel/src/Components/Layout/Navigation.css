@@ -6,3 +6,8 @@
 .text-primary{
     color: "#ffffff";
 }
+
+.navbar-expand-md .navbar-nav .nav-link {
+    padding-right: .5rem;
+    padding-left: 4.5rem;
+}
