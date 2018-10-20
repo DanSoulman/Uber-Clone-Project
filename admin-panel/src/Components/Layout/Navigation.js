@@ -10,8 +10,9 @@ class Navigation extends Component {
         <nav className="navbar navbar-expand-md navbar-dark bg-primary mb-4">
             <h2>
                 <Link to="/" className="navbar-brand">
+                    {' '}
                     <i className="fas fa-user-shield"></i>
-                    Admin Panel
+                    Admin Panel{' '}
                 </Link>
             </h2>
             <button 
