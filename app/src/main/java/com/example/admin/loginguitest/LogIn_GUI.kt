@@ -1,5 +1,6 @@
 package com.example.admin.loginguitest
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -20,7 +21,6 @@ class LogIn_GUI : AppCompatActivity() {
     lateinit var loginButton        : Button
     lateinit var emailTextField     : TextView
     lateinit var passwordTextField  : TextView
-    lateinit var contClass          : Controller
 
     private lateinit var fbAuth     : FirebaseAuth
 
@@ -42,7 +42,6 @@ class LogIn_GUI : AppCompatActivity() {
 
     fun logInHandler(v : View){
 
-
         if(logInFieldsEmpty() == false){
             if(isEmailValid(emailTextField.text.toString()) == true){
 
@@ -56,26 +55,24 @@ class LogIn_GUI : AppCompatActivity() {
 
     }
 
-    private fun FireBaseSignIn(name : String, password : String){
+    private fun FireBaseSignIn(name : String, password : String) {
 
         fbAuth.signInWithEmailAndPassword(name, password).addOnCompleteListener(this) { task ->
 
-            if(task.isSuccessful){
+            if (task.isSuccessful) {
                 val user = fbAuth.currentUser
                 Log.d(TAG, "signInWithEmail:success")
                 Toast.makeText(baseContext, "Success.",
                         Toast.LENGTH_SHORT).show()
-            }
-            else{
+            } else {
                 Log.w(TAG, "signInWithEmail:failure", task.exception)
                 Toast.makeText(baseContext, "Authentication failed.",
                         Toast.LENGTH_SHORT).show()
 
             }
 
+
         }
-
-
     }
 
     private fun isEmailValid(email : String) : Boolean{
@@ -109,7 +106,9 @@ class LogIn_GUI : AppCompatActivity() {
 
     }
 
-    fun signUpHandler(){
-
+    fun signUpHandler(v : View){
+        var intent : Intent = Intent(this, SignUpController :: class.java)
+        startActivity(intent)
     }
 }
+
