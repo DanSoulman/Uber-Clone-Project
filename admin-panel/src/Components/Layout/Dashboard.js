@@ -1,6 +1,6 @@
 import React from 'react';
-import Trips from '../Trips/Trips';
-import Sidebar from '../Layout/Sidebar';
+import Trips from '../trips/Trips';
+import Sidebar from '../layout/Sidebar';
 
 export default () =>{
   return (

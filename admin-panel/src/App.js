@@ -4,10 +4,11 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import store from './store';
 import './App.css';
-import Navigation from './Components/Layout/Navigation';
-import particleOptions from './Components/Layout/Particle';
-import Dashboard from './Components/Layout/Dashboard';
-/*import Login from './Components/Auth/Login';*/
+import Navigation from './Components/layout/Navigation';
+import particleOptions from './Components/layout/Particle';
+import Dashboard from './Components/layout/Dashboard';
+//import Login from './Components/Auth/Login';
+import TripDetails from './Components/trips/TripDetails';
 
 
 
@@ -24,6 +25,7 @@ class App extends Component {
             />
             <Switch>
               <Route exact path="/" component={Dashboard} />
+              <Route exact path="/trip/:id" component={TripDetails} />
             </Switch>
             </div>                
         </div>

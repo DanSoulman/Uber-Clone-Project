@@ -5,43 +5,30 @@ import {compose} from 'redux';
 import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import Timestamp from 'react-timestamp';
-
+import Spinner from '../layout/Spinner';
 import './Trips.css';
 
  class Trips extends Component {
-  render() {
+    state = {
+        totalOwed: null  
+        
+    }
+    static getDerivedStateFromProps(props, state) {
+        const {trips} = props;
+
+        if(trips){
+            //Add Balances
+            const total = trips.reduce((total, trip) => {
+                return total + parseFloat(trip.balance.toString());
+            }, 0)
+            return {totalOwed: total}
+        }
+        return null
+    }
+    render() {
       const {trips} = this.props ; 
-
-
-      /*[{
-          id: '234242341',
-          date: {
-              Date: '11/10/2018',
-              Time: '11:31:00 AM'
-          },
-          pickup: {
-              lat: '51.8885119',
-              long: '-8.5344533'
-          },
-          Active: 'False'
-
-      },
-    {
-        id: '3424124214',
-        date: {
-            Date: '10/10/2018',
-            Time: '12:31:00 AM'
-        },
-        pickup: {
-            lat: '91.8885119',
-            long: '-27.5344533'
-        },
-        Active: 'True'
-
-    }];*/
-
-
-    if(trips){/*Loading the table only if the trip info is retrieved from database */
+      const {totalOwed} = this.state;
+      if(trips){/*Loading the table only if the trip info is retrieved from database */
         return (
             <div>
                 <div className = "row">
@@ -52,7 +39,11 @@ import './Trips.css';
                         </h2> 
                     </div>
                     <div className="col-md-6">
-                
+                        <h5 className="text-right text-secondary">
+                        Total Owed:{' '}
+                        <span className='text-primary'>
+                            ${parseFloat(totalOwed).toFixed(2)}
+                        </span></h5>
                     </div>
                 </div>
 
@@ -61,7 +52,8 @@ import './Trips.css';
                         <tr>
                             <th> Date </th>
                             <th> Location</th>
-                            <th>Active</th> 
+                            <th>Active</th>
+                            <th>Balance</th>
                             <th />
                         </tr>
                     </thead>
@@ -71,8 +63,9 @@ import './Trips.css';
                                 <td><Timestamp time={trip.Date.seconds} format='full' /></td>
                                 <td>{trip.drop._lat} {trip.drop._long}</td>
                                  <td>{trip.Active}</td>
+                                 <td>{trip.balance}</td>
                                 <td>
-                                    <Link to={`/trip/${trips.id}`} 
+                                    <Link to={`/trip/${trip.id}`}
                                     className="btn btn-secondary btn-sm">
                                         <i className="fas fa-arrow-circle-right"></i> Details
                                     </Link>
@@ -85,7 +78,7 @@ import './Trips.css';
         );
     }
     else{
-        return <h1>Loading..</h1>
+        return <h1><Spinner /></h1>
     }
   }
 }
