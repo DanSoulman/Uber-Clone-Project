@@ -5,7 +5,7 @@ export default function spinner() {
   return (
     <div>
       <img src={loader} alt="Loading..." 
-      style={{width: '20px',margin: 'auto', display: 'block' }}/>
+      style={{width: '35px',margin: 'auto', display: 'block' }}/>
     </div>
   )
 }
