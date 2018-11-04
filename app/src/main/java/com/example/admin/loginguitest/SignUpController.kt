@@ -29,8 +29,8 @@ class SignUpController : AppCompatActivity() {
     lateinit var passwordTextField1 : TextView
 
     lateinit var submit     : Button
-    lateinit var facebook   : ImageButton
-    lateinit var twitter    : ImageButton
+    lateinit var facebook   : Button
+    lateinit var twitter    : Button
 
     lateinit var name : String
 
