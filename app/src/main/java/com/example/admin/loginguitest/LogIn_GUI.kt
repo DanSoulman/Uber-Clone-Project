@@ -64,6 +64,12 @@ class LogIn_GUI : AppCompatActivity() {
                 Log.d(TAG, "signInWithEmail:success")
                 Toast.makeText(baseContext, "Success.",
                         Toast.LENGTH_SHORT).show()
+
+                Thread.sleep(1000)
+
+                var intent : Intent = Intent(this, homepage :: class.java)
+                startActivity(intent)
+
             } else {
                 Log.w(TAG, "signInWithEmail:failure", task.exception)
                 Toast.makeText(baseContext, "Authentication failed.",
