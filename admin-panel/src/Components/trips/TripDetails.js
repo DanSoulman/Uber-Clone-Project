@@ -14,7 +14,6 @@ import './TripDetails.css';
       const {trip} = this.props;
       if(trip){
           if(this.props.user && this.props.vehicle){
-          console.log(this.props.user);
           var {user} = trip.user;
           var {vehicle} = trip.vehicle;
           for(var i = 0; i<this.props.user.length; i++)
@@ -122,7 +121,7 @@ import './TripDetails.css';
                         <div className="row">
                             <div className="col-md-6">
                                 <Link to="/" className="btn btn-link">
-                                    <i className="fas fa-arrow-circle-left"></i>Back to Dashboard
+                                    <i className="fas fa-arrow-circle-left"></i>{' '}Back to Dashboard
                                 </Link>
                             </div>  
                             <div className="col-md-6">
