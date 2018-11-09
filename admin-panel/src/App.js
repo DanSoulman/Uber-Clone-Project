@@ -9,6 +9,7 @@ import particleOptions from './Components/layout/Particle';
 import Dashboard from './Components/layout/Dashboard';
 //import Login from './Components/Auth/Login';
 import TripDetails from './Components/trips/TripDetails';
+import EditClient from './Components/trips/EditClient';
 
 
 
@@ -26,6 +27,7 @@ class App extends Component {
             <Switch>
               <Route exact path="/" component={Dashboard} />
               <Route exact path="/trip/:id" component={TripDetails} />
+              <Route exact path="/trip/edit/:id" component={EditClient} />
             </Switch>
             </div>                
         </div>
