@@ -5,31 +5,100 @@ import {compose} from 'redux';
 import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import Spinner from '../layout/Spinner';
-
+import './TripDetails.css';
 
 class EditClient extends Component{
-    render() {
-        const {trip} = this.props;
-        if(trip){
-            if(this.props.user && this.props.vehicle){
-            var {user} = trip.user;
-            var {vehicle} = trip.vehicle;
-            for(var i = 0; i<this.props.user.length; i++)
-            {
-                if(this.props.user[i].email === trip.user){
-                      user = this.props.user[i];
-                      break;
-                }
-            }
-            for(i=0; i<this.props.vehicle.length; i++){
-                if(this.props.vehicle[i].id === trip.vehicle._key.path.segments[6]){
-                      vehicle = this.props.vehicle[i];
-                      break;
-                }
-            }
-            console.log(user);
-            console.log(vehicle);
+    constructor(props){
+        super(props);
+        //Create refs
+
+        this.nameInput = React.createRef();
+        this.emailInput = React.createRef();
+        this.phoneInput = React.createRef();
+     }
+
+    onSubmit = e => {
+        e.preventDefault();
+        const {user, firestore, history} = this.props;
+
+        //update user
+        const updateClient = {
+            name: this.nameInput.current.value,
+            email: this.emailInput.current.value,
+            phone: this.phoneInput.current.value,
         }
+
+        firestore.update({collection: 'Users', doc: user.id},
+                         updateClient).then(history.push('/'));;
+
+    }
+        
+   render() {
+        const {user} = this.props;
+         if(user){
+            console.log(this.props);
+            return(
+                <div>
+                <div className="row">
+                  <div className="col-md-6">
+                    <Link to="/" className="btn btn-link">
+                      <i className="fas fa-arrow-circle-left" /> Back To Dashboard
+                    </Link>
+                  </div>
+                </div>        
+                <div className="card">
+                  <div className="card-header align"><strong>Edit Client</strong></div>
+                  <div className="card-body">
+                    <form onSubmit={this.onSubmit}>
+                      <div className="form-group align">
+                        <label htmlFor="firstName"><strong>Name:</strong></label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          name="Name"
+                          minLength="2"
+                          required
+                          ref = {this.nameInput}
+                          defaultValue={user.name}
+                        />
+                      </div>
+        
+                      <div className="form-group align">
+                        <label htmlFor="email"><strong>Email:</strong></label>
+                        <input
+                          type="email"
+                          className="form-control align"
+                          name="email"
+                          required
+                          ref = {this.emailInput}
+                          defaultValue={user.email}
+                        />
+                      </div>
+        
+                      <div className="form-group align">
+                        <label htmlFor="phone"><strong>Phone:</strong></label>
+                        <input
+                          type="text"
+                          className="form-control align"
+                          name="phone"
+                          minLength="10"
+                          required
+                          ref = {this.phoneInput}
+                          defaultValue={user.phone}
+                        />
+                      </div>
+
+                      <input
+                        type="submit"
+                        value="Submit"
+                        className="btn btn-primary btn-block"
+                      />
+                    </form>
+                  </div>
+                </div>
+              </div>
+            );
+                        
     }
         else{
              return <Spinner />
@@ -37,24 +106,17 @@ class EditClient extends Component{
     }
 }
 
-
-
-
 EditClient.propTypes = {
     firestore: PropTypes.object.isRequired
 }
 
-export default compose(
-    firestoreConnect( props => [
-        {collection: 'Trips', storeAs: 'trip', doc: props.match.params.id },
-        {collection: 'Users', storeAs: 'user'},
-        {collection: 'Vehicles', storeAs: 'vehicle'}
-    ]),
-    connect(({firestore: {ordered}}, props) => ({
-        trip: ordered.trip && ordered.trip[0],                //Retrieving state of the trip object and storing it as a prop
-        user: ordered.user,
-        vehicle: ordered.vehicle
-    }
-)
-)
-)(EditClient);
+            export default compose(
+                firestoreConnect( props => [
+                    {collection: 'Users', storeAs: 'user', doc: props.match.params.id}
+                ]),
+                connect(({firestore: {ordered}}, props) => ({
+                    user: ordered.user && ordered.user[0]
+                }
+            )
+        )
+    )(EditClient);

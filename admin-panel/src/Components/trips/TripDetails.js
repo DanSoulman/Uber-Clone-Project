@@ -29,9 +29,7 @@ import './TripDetails.css';
                     break;
               }
           }
-          console.log(user);
-          console.log(vehicle);
-          if(trip.Active === "False")
+          if(trip.Active === "False" && user)
           {
                 console.log("False");
                 return (
@@ -44,7 +42,7 @@ import './TripDetails.css';
                             </div>  
                             <div className="col-md-6">
                             <div className="btn-group float-right">
-                                <Link to={'/trip/edit/${trip.id}'} className="btn btn-dark">
+                                <Link to={`/trip/edit/${user.id}`} className="btn btn-dark">
                                     Edit
                                 </Link>
                                 <button className="btn btn-success">
@@ -115,7 +113,7 @@ import './TripDetails.css';
                    </div>
                 );
           }
-          else{
+          else if(user){
                  return (
                     <div>
                         <div className="row">
@@ -126,7 +124,7 @@ import './TripDetails.css';
                             </div>  
                             <div className="col-md-6">
                             <div className="btn-group float-right">
-                                <Link to={'/trip/edit/${trip.id}'} className="btn btn-dark">
+                                <Link to={`/trip/edit/${user.id}`} className="btn btn-dark">
                                     Edit
                                 </Link>
                                 <button className="btn btn-danger">
@@ -198,6 +196,9 @@ import './TripDetails.css';
                     </div>   
                 </div>
             );
+          }
+          else{
+              return <Spinner />;
           }
         }
         else{
