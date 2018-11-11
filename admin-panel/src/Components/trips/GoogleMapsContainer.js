@@ -2,6 +2,8 @@ import React from 'react';
 import { GoogleApiWrapper, InfoWindow, Map, Marker } from 'google-maps-react';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import firebase from 'firebase';
+
 class GoogleMapsContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -30,6 +32,16 @@ class GoogleMapsContainer extends React.Component {
     }
   }
   render() {
+    const db = firebase.firestore();
+    db.settings({
+      timestampsInSnapshots: true
+    });
+    const trip = db.collection("Trips");
+    if(trip)
+      console.log(trip);
+    else
+      console.log("Not Working");
+
     const style = {
       width: '72.2vw',
       height: '75vh',

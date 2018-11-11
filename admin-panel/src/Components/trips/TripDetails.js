@@ -44,7 +44,7 @@ import './TripDetails.css';
         }
         else{
             tripStatus = {
-                Active: "True"
+                Active: "False"
             };
             console.log(tripStatus);
             firestore
@@ -223,7 +223,9 @@ import './TripDetails.css';
                                 <Link to={`/trip/edit/${user.id}`} className="btn btn-dark">
                                     Edit
                                 </Link>
-                                <button className="btn btn-danger" onClick={this.onButtonClick}>
+                                <button 
+                                    className="btn btn-danger" 
+                                    onClick={this.onButtonClick}>
                                         Cancel
                                 </button>
                             </div>
