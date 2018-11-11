@@ -12,10 +12,8 @@ import './TripDetails.css';
  class TripDetails extends Component {
     state = {
         showBalanceUpdate: false, 
-        balanceUpdateAmount: ''
-    }
-
-    onChange = e => this.setState({[e.target.name]: e.target.value});
+        balanceUpdateAmount: '',
+    };
 
     balanceSubmit = e => {
         e.preventDefault();
@@ -25,11 +23,44 @@ import './TripDetails.css';
 
         const tripBalanceUpdate = {
             balance: parseFloat(balanceUpdateAmount)
-        }
-
+        };
         //Update in Firestore
         firestore.update({collection: 'Trips', doc: trip.id}, tripBalanceUpdate);
+    };
+  
+  onButtonClick = f => {
+      f.preventDefault();
+
+      const {trip, firestore} = this.props;
+      var {tripStatus} = trip.Active; 
+      if(trip){
+        if (trip.Active==="False"){
+            tripStatus = {
+                Active: "True"
+            };
+            console.log(tripStatus);
+            firestore
+            .update({collection: 'Trips', doc: trip.id}, tripStatus );
+        }
+        else{
+            tripStatus = {
+                Active: "True"
+            };
+            console.log(tripStatus);
+            firestore
+            .update({collection: 'Trips', doc: trip.id}, tripStatus);
+        }
     }
+    else{
+       console.log(this.props);
+    }
+
+      
+   };
+  
+  onChange = e => this.setState({[e.target.name]: e.target.value});
+
+
 
   render() {
       const {trip} = this.props;
@@ -40,7 +71,7 @@ import './TripDetails.css';
       if(showBalanceUpdate){
          balanceForm = (
              <form onSubmit={this.balanceSubmit}>
-                 <div>
+                 <div className="input-group">
                      <input 
                         type = "text"
                         className="form-control"
@@ -50,15 +81,18 @@ import './TripDetails.css';
                         onChange={this.onChange}
                         ></input>
                         <div className="input-group-append">
-                            <input type="submit" value="Update" className="btn btn-outline-dark"/>
+                            <input 
+                                type="submit" 
+                                value="Update" 
+                                className="btn btn-outline-dark"
+                            />
                         </div>
-                 </div>
-             </form>
-         )
-      }
-      else{
-          balanceForm = null;
-      }
+                     </div>
+                  </form>    
+                 );
+              } else {
+                balanceForm = null;
+            }
 
       if(trip){
           if(this.props.user && this.props.vehicle){
@@ -79,10 +113,9 @@ import './TripDetails.css';
           }
           console.log(trip.Active);
           console.log(user);
-          if(trip.Active==="False" && user)
+          if(trip.Active==="False" && user && vehicle)
           {
-                console.log("False");
-                return (
+                 return (
                     <div>
                         <div className="row">
                             <div className="col-md-6">
@@ -95,12 +128,14 @@ import './TripDetails.css';
                                 <Link to={`/trip/edit/${user.id}`} className="btn btn-dark">
                                     Edit
                                 </Link>
-                                <button className="btn btn-success">
-                                    Accept
+                                <button 
+                                   onClick={this.onButtonClick}
+                                   className="btn btn-success">
+                                      Accept
                                 </button>
                             </div>
-                            </div>              
-                        </div>
+                        </div>              
+                     </div>
                         <hr />
                         <div className="card">
                             <h3 className="card-header align">
@@ -120,12 +155,18 @@ import './TripDetails.css';
                                             'text-success': trip.balance === 0
                                         })}>${parseFloat(trip.balance).toFixed(2)}</span>{' '}
                                         <small>
-                                            <a href="#!" onClick={() => this.setState({showBalanceUpdate:
-                                            !this.state.showBalanceUpdate})}>
-                                            <i className="fas fa-pencil-alt"></i>
-                                            </a>
-                                        </small>
-                                    </h3>
+                                            <a 
+                                                href="#!"
+                                                onClick={() => 
+                                                    this.setState({
+                                                        showBalanceUpdate: !this.state.showBalanceUpdate
+                                                    })
+                                                }
+                                            >
+                                              <i className="fas fa-pencil-alt"></i>
+                                        </a>
+                                    </small>
+                                </h3>
                                      {balanceForm}
                                 </div>
                             </div>
@@ -159,16 +200,16 @@ import './TripDetails.css';
                                 <li className="list-group-item align">Model: {vehicle.model}</li>
                             </ul>
                         </div>
-                     </div>  
-                     <div className="row">
-                        <div className="col-md-12 col-sm-6 align">
+                        <div className="row">
+                            <div className="col-md-12 col-sm-6 align">
                              <Maps />
                         </div> 
-                    </div>                            
-                   </div>
+                    </div>  
+                 </div>  
+               </div>
                 );
           }
-          else if(user && trip.Active==="True"){
+          else if(user && trip.Active==="True" && vehicle){
                  return (
                     <div>
                         <div className="row">
@@ -182,8 +223,8 @@ import './TripDetails.css';
                                 <Link to={`/trip/edit/${user.id}`} className="btn btn-dark">
                                     Edit
                                 </Link>
-                                <button className="btn btn-danger">
-                                    Cancel
+                                <button className="btn btn-danger" onClick={this.onButtonClick}>
+                                        Cancel
                                 </button>
                             </div>
                             </div>              
@@ -246,14 +287,14 @@ import './TripDetails.css';
                                 <li className="list-group-item align">Model: {vehicle.model}</li>
                             </ul>
 
-                            <hr />
+
                     </div>
-                  </div>
-                  <div className="row">
+                    <div className="row">
                         <div className="col-md-12 col-sm-6 align">
                              <Maps />
                         </div> 
-                    </div>   
+                    </div>  
+                  </div>
                 </div>
             );
           }

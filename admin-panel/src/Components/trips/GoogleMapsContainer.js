@@ -31,11 +31,11 @@ class GoogleMapsContainer extends React.Component {
   }
   render() {
     const style = {
-      width: '50vw',
+      width: '72.2vw',
       height: '75vh',
-      'marginLeft': 'auto',
-      'marginRight': 'auto'
+      align: 'center'
     }
+      console.log(this.props);
     return (
       <Map
         item
@@ -76,5 +76,5 @@ class GoogleMapsContainer extends React.Component {
   }
 }
 export default GoogleApiWrapper({
-    api: ("AIzaSyBypik39EJkDIUmARDuzhfg_w9z7NUTqpA")
+    api: ("AIzaSyBI_XexW7iE_FJv_1rPg7sADzmXQX5sXKs")
 })(GoogleMapsContainer)

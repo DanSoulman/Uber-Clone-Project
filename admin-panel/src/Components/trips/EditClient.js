@@ -5,7 +5,6 @@ import {compose} from 'redux';
 import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import Spinner from '../layout/Spinner';
-import './TripDetails.css';
 
 class EditClient extends Component{
     constructor(props){
@@ -47,10 +46,10 @@ class EditClient extends Component{
                   </div>
                 </div>        
                 <div className="card">
-                  <div className="card-header align"><strong>Edit Client</strong></div>
+                  <div className="card-header"><strong>Edit Client</strong></div>
                   <div className="card-body">
                     <form onSubmit={this.onSubmit}>
-                      <div className="form-group align">
+                      <div className="form-group">
                         <label htmlFor="firstName"><strong>Name:</strong></label>
                         <input
                           type="text"
@@ -63,11 +62,11 @@ class EditClient extends Component{
                         />
                       </div>
         
-                      <div className="form-group align">
+                      <div className="form-group">
                         <label htmlFor="email"><strong>Email:</strong></label>
                         <input
                           type="email"
-                          className="form-control align"
+                          className="form-control"
                           name="email"
                           required
                           ref = {this.emailInput}
@@ -75,11 +74,11 @@ class EditClient extends Component{
                         />
                       </div>
         
-                      <div className="form-group align">
+                      <div className="form-group">
                         <label htmlFor="phone"><strong>Phone:</strong></label>
                         <input
                           type="text"
-                          className="form-control align"
+                          className="form-control"
                           name="phone"
                           minLength="10"
                           required
