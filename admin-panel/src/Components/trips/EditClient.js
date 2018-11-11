@@ -29,7 +29,7 @@ class EditClient extends Component{
         }
 
         firestore.update({collection: 'Users', doc: user.id},
-                         updateClient).then(history.push('/'));;
+                         updateClient).then(history.push('/'));
 
     }
         

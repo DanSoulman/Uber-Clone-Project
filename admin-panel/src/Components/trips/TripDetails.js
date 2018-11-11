@@ -10,8 +10,56 @@ import Maps from './GoogleMapsContainer';
 import './TripDetails.css';
 
  class TripDetails extends Component {
+    state = {
+        showBalanceUpdate: false, 
+        balanceUpdateAmount: ''
+    }
+
+    onChange = e => this.setState({[e.target.name]: e.target.value});
+
+    balanceSubmit = e => {
+        e.preventDefault();
+        
+        const {trip, firestore} = this.props;
+        const {balanceUpdateAmount} = this.state;
+
+        const tripBalanceUpdate = {
+            balance: parseFloat(balanceUpdateAmount)
+        }
+
+        //Update in Firestore
+        firestore.update({collection: 'Trips', doc: trip.id}, tripBalanceUpdate);
+    }
+
   render() {
       const {trip} = this.props;
+      const {showBalanceUpdate, balanceUpdateAmount} = this.state;
+
+      let balanceForm = '';
+      //if balance form should display
+      if(showBalanceUpdate){
+         balanceForm = (
+             <form onSubmit={this.balanceSubmit}>
+                 <div>
+                     <input 
+                        type = "text"
+                        className="form-control"
+                        name="balanceUpdateAmount"
+                        placeholder="Add New Balance"
+                        value={balanceUpdateAmount}
+                        onChange={this.onChange}
+                        ></input>
+                        <div className="input-group-append">
+                            <input type="submit" value="Update" className="btn btn-outline-dark"/>
+                        </div>
+                 </div>
+             </form>
+         )
+      }
+      else{
+          balanceForm = null;
+      }
+
       if(trip){
           if(this.props.user && this.props.vehicle){
           var {user} = trip.user;
@@ -29,7 +77,9 @@ import './TripDetails.css';
                     break;
               }
           }
-          if(trip.Active === "False" && user)
+          console.log(trip.Active);
+          console.log(user);
+          if(trip.Active==="False" && user)
           {
                 console.log("False");
                 return (
@@ -68,13 +118,18 @@ import './TripDetails.css';
                                         Balance: <span className={classnames({
                                             'text-danger':trip.balance>0,
                                             'text-success': trip.balance === 0
-                                        })}>${parseFloat(trip.balance).toFixed(2)}</span>
+                                        })}>${parseFloat(trip.balance).toFixed(2)}</span>{' '}
+                                        <small>
+                                            <a href="#!" onClick={() => this.setState({showBalanceUpdate:
+                                            !this.state.showBalanceUpdate})}>
+                                            <i className="fas fa-pencil-alt"></i>
+                                            </a>
+                                        </small>
                                     </h3>
+                                     {balanceForm}
                                 </div>
                             </div>
-                                {/* @todo - balanceform */}
-
-
+                               
                             <hr />
                             <ul className="list-group">
                                 <li className="list-group-item align">Contact Email: {user.email}</li>
@@ -113,7 +168,7 @@ import './TripDetails.css';
                    </div>
                 );
           }
-          else if(user){
+          else if(user && trip.Active==="True"){
                  return (
                     <div>
                         <div className="row">
@@ -150,12 +205,17 @@ import './TripDetails.css';
                                         Balance: <span className={classnames({
                                             'text-danger':trip.balance>0,
                                             'text-success': trip.balance === 0
-                                        })}>${parseFloat(trip.balance).toFixed(2)}</span>
+                                        })}>${parseFloat(trip.balance).toFixed(2)}</span>{' '}
+                                        <small>
+                                            <a href="#!" onClick={() => this.setState({showBalanceUpdate:
+                                            !this.state.showBalanceUpdate})}>
+                                            <i className="fas fa-pencil-alt"></i>
+                                            </a>
+                                        </small>
                                     </h3>
+                                    {balanceForm}
                                 </div>
                             </div>
-                                {/* @todo - balanceform */}
-
 
                             <hr />
                             <ul className="list-group">
