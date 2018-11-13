@@ -67,7 +67,10 @@ class LogIn_GUI : AppCompatActivity() {
 
                 Thread.sleep(1000)
 
+                //var intent = Intent(this, MapsActivity :: class.java)
+
                 var intent : Intent = Intent(this, homepage :: class.java)
+
                 startActivity(intent)
 
             } else {

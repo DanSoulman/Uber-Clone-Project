@@ -17,6 +17,7 @@
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30sp"
             android:text="SIGN UP"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
@@ -111,6 +112,7 @@
             android:layout_height="60dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="20sp"
             android:layout_marginStart="132dp"
             android:layout_marginEnd="132dp"
             android:onClick="signUpService"
@@ -124,44 +126,19 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="spread_inside" />
 
-        <TextView
-            android:id="@+id/socialMediaPrompt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:text="Or Sign Up with Social Media"
-            android:textAllCaps="false"
-            android:textColor="@android:color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/submit"
-            tools:text="Or Sign Up with Social Media" />
-
         <Space
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp" />
 
         <Button
-            android:id="@+id/facebook"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
-            android:text="Log In Using Facebook"
-            android:textStyle="bold" />
-
-        <Button
             android:id="@+id/twitter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            android:text="Log In Using Twitter"
+            android:clickable="true"
+            android:onClick="signUpViaGoogle"
+            android:text="Log In Using Google+"
             android:textStyle="bold" />
 
     </LinearLayout>

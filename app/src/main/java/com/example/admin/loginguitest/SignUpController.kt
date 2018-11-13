@@ -1,24 +1,22 @@
 package com.example.admin.loginguitest
 
-import android.content.Context
+
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import java.util.HashMap
-import java.util.*
-import android.telephony.TelephonyManager
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+
 
 
 class SignUpController : AppCompatActivity() {
@@ -34,6 +32,8 @@ class SignUpController : AppCompatActivity() {
 
     lateinit var name : String
 
+    //TODO: add variable to store number
+
     lateinit var fb : FirebaseAuth
 
     companion object {
@@ -41,7 +41,7 @@ class SignUpController : AppCompatActivity() {
         var dbRef : FirebaseFirestore = FirebaseFirestore.getInstance()
     }
 
-
+    //TODO: Add the Mobile number Info here
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up_controller)
@@ -52,7 +52,7 @@ class SignUpController : AppCompatActivity() {
         emailTextField = findViewById(R.id.emailTextField) as TextView
         passwordTextField = findViewById(R.id.passwordTextField) as TextView
         passwordTextField1 = findViewById(R.id.passwordTextField1) as TextView
-
+        //TODO: call it numberTextField
     }
 
     fun signUpService(v : View){
@@ -65,6 +65,8 @@ class SignUpController : AppCompatActivity() {
 
                 signUpToAuth(emailTextField.text.toString(), passwordTextField.text.toString())
                 name = nameTextField.text.toString()
+                //TODO: read in numberTextField to number
+
                 clearText()
             }
 
@@ -138,10 +140,11 @@ class SignUpController : AppCompatActivity() {
     private fun fireStoreSignUp(){
         var dataToSave : MutableMap<String, String> = HashMap<String, String>()
 
-        val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        //val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
-        var number : String?
+        //var number : String?
 
+        /*
         try {
             number = tm.line1Number
 
@@ -150,11 +153,13 @@ class SignUpController : AppCompatActivity() {
            number = null
 
         }
+        */
 
         dataToSave.put("name", name)
         //dataToSave.put("lastname", name[1])
         dataToSave.put("email", fb.currentUser!!.email!!)
-        //dataToSave.put("mobile", number!!)
+
+        //TODO: dataToSave.put("mobile", number!!) Have a text field called number, pull the phone number
 
         dbRef.collection("Users").add(dataToSave as Map<String, String>)
 
@@ -162,7 +167,7 @@ class SignUpController : AppCompatActivity() {
     }
 
     private fun signUpFieldsEmpty(): Boolean {
-
+        //TODO: Add ability to check if number field empty
         if (nameTextField.text.isBlank() || emailTextField.text.isBlank() || passwordTextField.text.isBlank() || passwordTextField1.text.isBlank()) {
             Toast.makeText(baseContext, "Please do not leave ANY field Empty.", Toast.LENGTH_SHORT).show()
             clearText()
@@ -171,6 +176,21 @@ class SignUpController : AppCompatActivity() {
         }
 
         return false
+    }
+
+    fun signUpViaGoogle(v : View){
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+
+        Log.d(TAG, "Signing up Via Google")
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build()
+
+        // Build a GoogleSignInClient with the options specified by gso.
+        var mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+
+
     }
 
 
