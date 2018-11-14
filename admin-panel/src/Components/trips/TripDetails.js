@@ -38,7 +38,6 @@ import './TripDetails.css';
             tripStatus = {
                 Active: "True"
             };
-            console.log(tripStatus);
             firestore
             .update({collection: 'Trips', doc: trip.id}, tripStatus );
         }
@@ -46,7 +45,6 @@ import './TripDetails.css';
             tripStatus = {
                 Active: "False"
             };
-            console.log(tripStatus);
             firestore
             .update({collection: 'Trips', doc: trip.id}, tripStatus);
         }
@@ -65,7 +63,7 @@ import './TripDetails.css';
   render() {
       const {trip} = this.props;
       const {showBalanceUpdate, balanceUpdateAmount} = this.state;
-
+      console.log(this.props);
       let balanceForm = '';
       //if balance form should display
       if(showBalanceUpdate){
@@ -94,11 +92,10 @@ import './TripDetails.css';
                 balanceForm = null;
             }
 
-      if(trip){
+      if(trip&&this.props.vehicle&&this.props.user){
           console.log(trip);
-          if(this.props.user && this.props.vehicle){
-          var {user} = trip.user;
-          var {vehicle} = trip.vehicle;
+          var {user} = this.props;
+          var {vehicle} = this.props;
           for(var i = 0; i<this.props.user.length; i++)
           {
               if(this.props.user[i].email === trip.user){
@@ -112,9 +109,9 @@ import './TripDetails.css';
                     break;
               }
           }
-          console.log(trip.Active);
           console.log(user);
-          if(trip.Active==="False" && user && vehicle)
+          console.log(vehicle);
+          if(trip.Active==="False")
           {
                  return (
                     <div>
@@ -187,7 +184,7 @@ import './TripDetails.css';
                                 </div>
                                 <div className="col-md-4 col-sm-6 align">
                                     <h3 className="pull-right">
-                                        Maintenance?: <span className={classnames({
+                                       Needs Maintenance?: <span className={classnames({
                                             'text-danger':vehicle.maintenance==="false",
                                             'text-success': vehicle.maintenance === "true"
                                         })}>{vehicle.maintenance.toUpperCase()}</span>
@@ -214,7 +211,7 @@ import './TripDetails.css';
                </div>
                 );
           }
-          else if(user && trip.Active==="True" && vehicle){
+          else{
                  return (
                     <div>
                         <div className="row">
@@ -280,7 +277,7 @@ import './TripDetails.css';
                                 </div>
                                 <div className="col-md-4 col-sm-6 align">
                                     <h3 className="pull-right">
-                                        Maintenance?: <span className={classnames({
+                                        Needs Maintenance?: <span className={classnames({
                                             'text-danger':vehicle.maintenance==="false",
                                             'text-success': vehicle.maintenance === "true"
                                         })}>{vehicle.maintenance.toUpperCase()}</span>
@@ -309,13 +306,6 @@ import './TripDetails.css';
                 </div>
             );
           }
-          else{
-              return <Spinner />;
-          }
-        }
-        else{
-            return <Spinner />;
-        }
       }
       else{
           return <Spinner />;
@@ -335,13 +325,13 @@ get the id of the trip from the collections trips
 export default compose(
             firestoreConnect( props => [
                 {collection: 'Trips', storeAs: 'trip', doc: props.match.params.id },
-                {collection: 'Users', storeAs: 'user'},
-                {collection: 'Vehicles', storeAs: 'vehicle'}
+                {collection: 'Vehicles'},
+                {collection: 'Users', storeAs: 'user'}
             ]),
             connect(({firestore: {ordered}}, props) => ({
                 trip: ordered.trip && ordered.trip[0],                //Retrieving state of the trip object and storing it as a prop
-                user: ordered.user,
-                vehicle: ordered.vehicle
+                vehicle: ordered.Vehicles,
+                user: ordered.user
             }
         )
     )

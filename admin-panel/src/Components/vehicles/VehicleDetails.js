@@ -39,12 +39,12 @@ import Map from './VehicleMap';
                             <div className="row">
                                 <div className="col-md-8 col-sm-6 align">
                                     <h4>
-                                        Distance Travelled:{' '} <span className="text-secondary">{vehicle.distance}</span>
+                                        Distance Travelled:{' '} <span className="text-secondary">{vehicle.distance}{' '}miles</span>
                                     </h4> 
                                 </div>
                                 <div className="col-md-4 col-sm-6 align">
                                     <h3 className="pull-right">
-                                        Maintenance?: <span className={classnames({
+                                        Needs Maintenance?: <span className={classnames({
                                             'text-danger':vehicle.maintenance==="false",
                                             'text-success': vehicle.maintenance === "true"
                                         })}>{vehicle.maintenance.toUpperCase()}</span>

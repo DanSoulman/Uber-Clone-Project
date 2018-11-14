@@ -23,7 +23,7 @@ import './Vehicle.css';
                     </div>
                     <div className="col-md-6">
                         <h5 className="text-right text-secondary">
-                            <Link to={{pathname:'/allvehicles',state:{vehicle} }} className="btn btn-dark btn-block">
+                            <Link to={{pathname:`/allvehicles/display`, state:{vehicle: vehicle} }} className="btn btn-dark btn-block">
                                 <i className="fas fa-info-circle"/>{' '}All Vehicles
                             </Link>
                         </h5>
@@ -65,7 +65,7 @@ import './Vehicle.css';
   }
 }
 
-Vehicles.PropTypes = {
+Vehicles.propTypes = {
     firestore: PropTypes.object.isRequired,
     vehicle: PropTypes.array
 }

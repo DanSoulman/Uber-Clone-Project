@@ -12,6 +12,7 @@
     "prop-types": "^15.6.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
+    "react-native-maps-directions": "^1.6.0",
     "react-particles-js": "^2.3.0",
     "react-redux": "^5.0.7",
     "react-redux-firebase": "^2.1.8",
