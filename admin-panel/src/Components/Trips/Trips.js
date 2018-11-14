@@ -83,7 +83,7 @@ import './Trips.css';
   }
 }
 
-Trips.PropTypes = {
+Trips.propTypes = {
     firestore: PropTypes.object.isRequired,
     trips: PropTypes.array
 }

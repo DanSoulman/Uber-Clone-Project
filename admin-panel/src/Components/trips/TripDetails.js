@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import Spinner from '../layout/Spinner';
 import classnames from 'classnames';
-import Maps from './GoogleMapsContainer';
+import Maps from './Maps';
 import './TripDetails.css';
 
  class TripDetails extends Component {
@@ -95,6 +95,7 @@ import './TripDetails.css';
             }
 
       if(trip){
+          console.log(trip);
           if(this.props.user && this.props.vehicle){
           var {user} = trip.user;
           var {vehicle} = trip.vehicle;
@@ -202,7 +203,11 @@ import './TripDetails.css';
                         </div>
                         <div className="row">
                             <div className="col-md-12 col-sm-6 align">
-                             <Maps />
+                            <Maps 
+                                trips={trip}
+                                vehicle={vehicle}
+                                user={user}
+                            />
                         </div> 
                     </div>  
                  </div>  
@@ -293,7 +298,11 @@ import './TripDetails.css';
                     </div>
                     <div className="row">
                         <div className="col-md-12 col-sm-6 align">
-                             <Maps />
+                        <Maps 
+                            trips={trip}
+                            vehicle={vehicle}
+                            user={user}
+                        />
                         </div> 
                     </div>  
                   </div>

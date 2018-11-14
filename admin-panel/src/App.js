@@ -10,6 +10,9 @@ import Dashboard from './Components/layout/Dashboard';
 //import Login from './Components/Auth/Login';
 import TripDetails from './Components/trips/TripDetails';
 import EditClient from './Components/trips/EditClient';
+import VehicleDetails from './Components/vehicles/VehicleDetails';
+// import AllVehicles from './Components/vehicles/AllVehicles';
+import EditVehicle from './Components/vehicles/EditVehicle';
 
 
 
@@ -28,6 +31,9 @@ class App extends Component {
               <Route exact path="/" component={Dashboard} />
               <Route exact path="/trip/:id" component={TripDetails} />
               <Route exact path="/trip/edit/:id" component={EditClient} />
+              {/* <Route exact path="/allvehicles/:id" component={AllVehicles} /> */}
+              <Route exact path="/vehicle/:id" component={VehicleDetails} />
+              <Route exact path="/vehicle/edit/:id" component={EditVehicle} />
             </Switch>
             </div>                
         </div>

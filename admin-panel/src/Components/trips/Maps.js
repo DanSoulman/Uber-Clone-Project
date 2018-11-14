@@ -1,8 +1,5 @@
 import React from 'react';
 import { GoogleApiWrapper, InfoWindow, Map, Marker } from 'google-maps-react';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import firebase from 'firebase';
 
 class GoogleMapsContainer extends React.Component {
   constructor(props) {
@@ -32,22 +29,12 @@ class GoogleMapsContainer extends React.Component {
     }
   }
   render() {
-    const db = firebase.firestore();
-    db.settings({
-      timestampsInSnapshots: true
-    });
-    const trip = db.collection("Trips");
-    if(trip)
-      console.log(trip);
-    else
-      console.log("Not Working");
-
     const style = {
       width: '72.2vw',
       height: '75vh',
       align: 'center'
     }
-      console.log(this.props);
+    var image = 'http://icons.iconarchive.com/icons/icons-land/transporter/48/Car-Right-Red-icon.png';
     return (
       <Map
         item
@@ -56,32 +43,25 @@ class GoogleMapsContainer extends React.Component {
         google = { this.props.google }
         onClick = { this.onMapClick }
         zoom = { 14 }
-        initialCenter = {{ lat: 39.648209, lng: -75.711185 }}
+        initialCenter = {{ lat: this.props.trips.drop._lat, lng: this.props.trips.drop._long }}
       >
         <Marker
           onClick = { this.onMarkerClick }
-          title = { 'Changing Colors Garage' }
-          position = {{ lat: 39.648209, lng: -75.711185 }}
-          name = { 'Changing Colors Garage' }
+          title = { this.props.user.name }
+          position = {{ lat: this.props.trips.drop._lat, lng: this.props.trips.drop._long }}
+          name = { this.props.user.name }
+        />
+        <Marker
+          onClick = { this.onMarkerClick }
+          title = { this.props.vehicle.id }
+          icon = {{url: image}}
+          position = {{ lat: this.props.vehicle.location._lat, lng: this.props.vehicle.location._long }}
+          name = { this.props.vehicle.id }
         />
         <InfoWindow
           marker = { this.state.activeMarker }
           visible = { this.state.showingInfoWindow }
         >
-          <Paper>
-            <Typography
-              variant = 'headline'
-              component = 'h4'
-            >
-              Changing Colors Garage
-            </Typography>
-            <Typography
-              component = 'p'
-            >
-              98G Albe Dr Newark, DE 19702 <br />
-              302-293-8627
-            </Typography>
-          </Paper>
         </InfoWindow>
       </Map>
     );
