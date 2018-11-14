@@ -1,6 +1,7 @@
 package com.example.admin.loginguitest
 
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,36 +10,34 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import java.util.HashMap
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.*
 
 
 class SignUpController : AppCompatActivity() {
 
-    lateinit var nameTextField      : TextView
-    lateinit var emailTextField     : TextView
-    lateinit var passwordTextField  : TextView
-    lateinit var passwordTextField1 : TextView
+    lateinit var nameTextField: TextView
+    lateinit var emailTextField: TextView
+    lateinit var passwordTextField: TextView
+    lateinit var passwordTextField1: TextView
 
-    lateinit var submit     : Button
-    lateinit var facebook   : Button
-    lateinit var twitter    : Button
+    lateinit var submit: Button
+    lateinit var facebook: Button
+    lateinit var twitter: Button
 
-    lateinit var name : String
+    lateinit var name: String
 
     //TODO: add variable to store number
 
-    lateinit var fb : FirebaseAuth
+    lateinit var fb: FirebaseAuth
 
     companion object {
         var TAG = "SignUpActivity"
-        var dbRef : FirebaseFirestore = FirebaseFirestore.getInstance()
+        var dbRef: FirebaseFirestore = FirebaseFirestore.getInstance()
     }
 
     //TODO: Add the Mobile number Info here
@@ -55,22 +54,20 @@ class SignUpController : AppCompatActivity() {
         //TODO: call it numberTextField
     }
 
-    fun signUpService(v : View){
-        if(signUpFieldsEmpty() == false){
+    fun signUpService(v: View) {
+        if (signUpFieldsEmpty() == false) {
 
-            var passwordFieldOne : String = passwordTextField.text.toString()
-            var passwordFieldTwo : String = passwordTextField1.text.toString()
+            var passwordFieldOne: String = passwordTextField.text.toString()
+            var passwordFieldTwo: String = passwordTextField1.text.toString()
 
-            if(passwordFieldTwo.equals(passwordFieldOne)){
+            if (passwordFieldTwo.equals(passwordFieldOne)) {
 
                 signUpToAuth(emailTextField.text.toString(), passwordTextField.text.toString())
                 name = nameTextField.text.toString()
                 //TODO: read in numberTextField to number
 
                 clearText()
-            }
-
-            else{
+            } else {
                 Toast.makeText(baseContext, "Make sure passwords match",
                         Toast.LENGTH_SHORT).show()
 
@@ -84,7 +81,7 @@ class SignUpController : AppCompatActivity() {
 
     }
 
-    private fun signUpToAuth(email : String, password : String){
+    private fun signUpToAuth(email: String, password: String) {
         fb.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
@@ -102,33 +99,26 @@ class SignUpController : AppCompatActivity() {
                         Toast.makeText(baseContext, "Authentication Failed",
                                 Toast.LENGTH_SHORT).show()
 
-                        try{
+                        try {
                             throw task.exception!!
-                        }
-                        catch (weakPassword : FirebaseAuthWeakPasswordException)
-                        {
+                        } catch (weakPassword: FirebaseAuthWeakPasswordException) {
                             Log.d(TAG, "onComplete: weak_password")
                             passwordTextField.error = "Do not enter a weak password"
 
 
                         }
                         // if user enters wrong password.
-                        catch (malformedEmail : FirebaseAuthInvalidCredentialsException)
-                        {
+                        catch (malformedEmail: FirebaseAuthInvalidCredentialsException) {
                             Log.d(TAG, "onComplete: malformed_email")
                             emailTextField.error = "Do not enter a malformed email"
 
 
-                        }
-                        catch (existEmail : FirebaseAuthUserCollisionException)
-                        {
+                        } catch (existEmail: FirebaseAuthUserCollisionException) {
                             Log.d(TAG, "onComplete: exist_email")
                             emailTextField.error = "This email already exists, log in with your account"
 
 
-                        }
-                        catch (e : Exception)
-                        {
+                        } catch (e: Exception) {
                             Log.d(TAG, "onComplete: " + e.message)
                         }
                     }
@@ -137,8 +127,8 @@ class SignUpController : AppCompatActivity() {
                 }
     }
 
-    private fun fireStoreSignUp(){
-        var dataToSave : MutableMap<String, String> = HashMap<String, String>()
+    private fun fireStoreSignUp() {
+        var dataToSave: MutableMap<String, String> = HashMap<String, String>()
 
         //val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
@@ -177,22 +167,84 @@ class SignUpController : AppCompatActivity() {
 
         return false
     }
-
-    fun signUpViaGoogle(v : View){
+    /*
+    //LOGGING IN THROUGH GOOGLE PLUS --------------------------------------------
+    fun signUpViaGoogle(v: View) {
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
 
         Log.d(TAG, "Signing up Via Google")
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                //Client ID WebClient 146078760213-01dddiigen9ds5a13it2qbokshd89jer.apps.googleusercontent.com
+                //App 146078760213-v5evi53aeuckik8hnapcp835altrghtu.apps.googleusercontent.com
                 .requestEmail()
                 .build()
 
         // Build a GoogleSignInClient with the options specified by gso.
         var mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+        val signInIntent = mGoogleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
 
 
     }
+    */
 
+    //private fun signInGoogle() {  Moved above, commented out just in case, Android Studio being weird
+    //    val signInIntent = mGoogleSignInClient.signInIntent
+    //    startActivityForResult(signInIntent, RC_SIGN_IN)
+    //}
+
+    /*
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                val account = task.getResult(ApiException::class.java)
+                firebaseAuthWithGoogle(account!!)
+            } catch (e: ApiException) {
+                // Google Sign In failed, update UI appropriately
+                Log.w(TAG, "Google sign in failed", e)
+                // ...
+            }
+        }
+    }
+    */
+
+    //TODO: Ask Jamie where I put this, not sure I need it
+    /*public override fun onStart() {
+    super.onStart()
+    // Check if user is signed in (non-null) and update UI accordingly.
+    val currentUser = auth.currentUser
+    updateUI(currentUser)
+}
+*/
+
+    private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
+        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.id!!)
+
+        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
+        fb.signInWithCredential(credential)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithCredential:success")
+                        val user = fb.currentUser
+                        //updateUI(user)
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithCredential:failure", task.exception)
+                        //Snackbar.make(main_layout, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
+                        //updateUI(null)
+                    }
+
+                    // ...
+                }
+    }
 
     private fun clearText() {
         nameTextField.text = ""
