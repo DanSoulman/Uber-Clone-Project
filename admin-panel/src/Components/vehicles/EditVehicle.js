@@ -49,7 +49,7 @@ class EditVehicle extends Component{
          if(vehicle){
             return(
                 <div>
-                <div className="row">
+                <div className="test">
                   <div className="col-md-6">
                     <Link to="/" className="btn btn-link">
                       <i className="fas fa-arrow-circle-left" /> Back To Dashboard

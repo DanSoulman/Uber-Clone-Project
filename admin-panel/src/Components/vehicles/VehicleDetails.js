@@ -7,6 +7,7 @@ import {firestoreConnect} from 'react-redux-firebase';
 import Spinner from '../layout/Spinner';
 import classnames from 'classnames';
 import Map from './VehicleMap';
+import './VehicleDetails.css';
 
  class VehicleDetails extends Component {
  
@@ -16,7 +17,7 @@ import Map from './VehicleMap';
         console.log(vehicle);
                return (
                     <div>
-                        <div className="row">
+                        <div className="test">
                             <div className="col-md-6">
                                 <Link to="/" className="btn btn-link align">
                                     <i className="fas fa-arrow-circle-left"></i>{' '}Back to Dashboard

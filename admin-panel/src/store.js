@@ -3,8 +3,7 @@ import firebase from 'firebase';
 import 'firebase/firestore';
 import {reactReduxFirebase, firebaseReducer} from 'react-redux-firebase';
 import {reduxFirestore, firestoreReducer} from 'redux-firestore';
-//import * as admin from 'firebase-admin';
-//Reducers
+import notifyReducers from './reducers/notifyReducer';
 //@todo
 
 const firebaseConfig = {
@@ -40,7 +39,8 @@ firebase.firestore();
 
   const rootReducer = combineReducers({
       firebase: firebaseReducer,
-      firestore: firestoreReducer
+      firestore: firestoreReducer,
+      notify: notifyReducers
   });
 
   //Create Initial state

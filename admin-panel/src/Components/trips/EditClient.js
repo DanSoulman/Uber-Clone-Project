@@ -5,6 +5,7 @@ import {compose} from 'redux';
 import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import Spinner from '../layout/Spinner';
+import './TripDetails.css';
 
 class EditClient extends Component{
     constructor(props){
@@ -38,7 +39,7 @@ class EditClient extends Component{
             console.log(this.props);
             return(
                 <div>
-                <div className="row">
+                <div className="test">
                   <div className="col-md-6">
                     <Link to="/" className="btn btn-link">
                       <i className="fas fa-arrow-circle-left" /> Back To Dashboard
