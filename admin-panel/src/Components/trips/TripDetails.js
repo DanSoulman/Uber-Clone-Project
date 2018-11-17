@@ -115,7 +115,7 @@ import './TripDetails.css';
           {
                  return (
                     <div>
-                        <div className="row">
+                        <div className="test">
                             <div className="col-md-6">
                                 <Link to="/" className="btn btn-link align">
                                     <i className="fas fa-arrow-circle-left"></i>{' '}Back to Dashboard
@@ -214,7 +214,7 @@ import './TripDetails.css';
           else{
                  return (
                     <div>
-                        <div className="row">
+                        <div className="test">
                             <div className="col-md-6">
                                 <Link to="/" className="btn btn-link">
                                     <i className="fas fa-arrow-circle-left"></i>{' '}Back to Dashboard
@@ -269,7 +269,7 @@ import './TripDetails.css';
                             </ul>
 
                             <hr />
-                            <div className="row">
+                            <div className="test">
                                 <div className="col-md-8 col-sm-6 align">
                                     <h4>
                                         Car Info:{' '} <span className="text-secondary">{vehicle.id}</span>
@@ -293,7 +293,7 @@ import './TripDetails.css';
 
 
                     </div>
-                    <div className="row">
+                    <div className="test">
                         <div className="col-md-12 col-sm-6 align">
                         <Maps 
                             trips={trip}

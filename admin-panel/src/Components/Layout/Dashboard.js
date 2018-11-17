@@ -2,11 +2,12 @@ import React from 'react';
 import Trips from '../trips/Trips';
 import Sidebar from '../layout/Sidebar';
 import Vehicle from '../vehicles/Vehicles';
+import './Dashboard.css';
 
 export default () =>{
   return (
       <div>
-        <div className="row">
+        <div className="test">
             <div className="col-md-10">
                <Trips />
             </div>
@@ -16,7 +17,7 @@ export default () =>{
         </div>
         <br />
         <br />
-        <div className="row">
+        <div className="test">
             <div className="col-md-10">
                 <Vehicle />
             </div>
