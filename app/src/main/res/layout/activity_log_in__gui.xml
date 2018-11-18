@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,139 +8,114 @@
 
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:orientation="horizontal"></LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0">
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="53dp"
+        android:text="Transport AI"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@color/design_default_color_primary_dark"
+        android:textStyle="bold"
+        android:typeface="normal"
+        tools:text="Transport AI" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:text="LOG IN"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                android:textStyle="bold"
-                tools:text="LOGIN" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:orientation="horizontal">
-
-
-                <EditText
-                    android:id="@+id/emailTextField"
-                    android:layout_width="70dp"
-                    android:layout_height="60dp"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginEnd="50dp"
-                    android:layout_weight="1"
-                    android:contentDescription="Enter Email"
-                    android:ems="10"
-                    android:hint="Enter Email"
-                    android:inputType="textEmailAddress"
-                    android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:orientation="horizontal">
+    <EditText
+        android:id="@+id/emailTextField"
+        android:layout_width="233dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/PasswordField"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="180dp"
+        android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
+        android:contentDescription="Enter Email"
+        android:hint="Enter Email"
+        android:inputType="textEmailAddress"
+        android:singleLine="true"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textStyle="bold" />
 
 
-                <EditText
-                    android:id="@+id/PasswordField"
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginEnd="50dp"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="Enter Password"
-                    android:inputType="textPassword"
-                    android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                    android:textStyle="bold" />
+    <EditText
+        android:id="@+id/PasswordField"
+        android:layout_width="233dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="255dp"
+        android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
+        android:hint="Enter Password"
+        android:inputType="textPassword"
+        android:singleLine="true"
+        android:textAlignment="center"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textStyle="bold" />
 
-            </LinearLayout>
+    <Button
+        android:id="@+id/LogInButton"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="144dp"
+        android:onClick="logInHandler"
+        android:text="LOGIN"
+        android:textAlignment="center"
+        android:textColorLink="@color/colorAccent" />
 
-            <Button
-                android:id="@+id/LogInButton"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="120dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:onClick="logInHandler"
-                android:text="LOGIN"
-                android:textAlignment="center"
-                android:textColorLink="@color/colorAccent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="@color/colorPrimaryDark">
 
-            <LinearLayout
-                android:id="@+id/SignUp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:layout_marginTop="100dp"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:id="@+id/noAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="18dp"
+            android:clickable="true"
+            android:onClick="signUpHandler"
+            android:text="Don't have an account?"
+            android:textAlignment="viewStart"
+            android:textColor="@color/common_google_signin_btn_text_dark_pressed"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="Don't have an account?" />
 
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="15dp"
-                    android:layout_weight="1"
-                    android:text="Don't have an account?"
-                    android:textAlignment="viewStart"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintTop_toBottomOf="@+id/LogInButton"
-                    tools:layout_editor_absoluteX="10dp" />
+        <TextView
+            android:id="@+id/SignUpHere"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="19dp"
+            android:clickable="true"
+            android:onClick="signUpHandler"
+            android:text="Sign Up Here"
+            android:textAlignment="viewStart"
+            android:textColor="@color/loginText"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/SignUpHere"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_weight="1"
-                    android:clickable="true"
-                    android:onClick="signUpHandler"
-                    android:text="Sign Up Here"
-                    android:textAlignment="viewStart"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView3" />
-            </LinearLayout>
 
-        </LinearLayout>
-    </LinearLayout>
-
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

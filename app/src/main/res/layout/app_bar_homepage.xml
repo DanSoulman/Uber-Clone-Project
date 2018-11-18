@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,6 +7,28 @@
     android:layout_height="match_parent"
     tools:context=".homepage">
 
-    <include layout="@layout/content_homepage" />
+
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_homepage" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/placePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:clickable="true"
+        android:onClick="fabOnClick"
+        android:visibility="visible"
+        app:backgroundTint="@color/colorPrimary"
+        app:fabSize="normal"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="right|bottom"
+        app:rippleColor="@color/common_google_signin_btn_text_light_default"
+        app:srcCompat="@drawable/ic_map" />
+
 
 </android.support.design.widget.CoordinatorLayout>
