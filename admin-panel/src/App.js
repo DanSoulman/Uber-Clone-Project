@@ -14,6 +14,7 @@ import VehicleDetails from './Components/vehicles/VehicleDetails';
 import AllVehicles from './Components/vehicles/AllVehicles';
 import EditVehicle from './Components/vehicles/EditVehicle';
 import {UserIsAuthenticated, UserIsNotAuthenticated} from './helpers/Auth';
+import Settings from './Components/settings/Settings';
 
 
 
@@ -36,6 +37,7 @@ class App extends Component {
               <Route exact path="/vehicle/:id" component={UserIsAuthenticated(VehicleDetails)} />
               <Route exact path="/vehicle/edit/:id" component={UserIsAuthenticated(EditVehicle)} />
               <Route exact path="/login" component={UserIsNotAuthenticated(Login)} />
+              <Route exact path="/settings" component={UserIsAuthenticated(Settings)} />
             </Switch>
             </div>                
         </div>
