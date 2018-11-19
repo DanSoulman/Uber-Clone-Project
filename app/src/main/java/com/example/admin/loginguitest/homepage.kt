@@ -2,20 +2,17 @@ package com.example.admin.loginguitest
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Geocoder
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.v4.app.ActivityCompat
-import android.support.v4.app.ActivityCompat.startActivityForResult
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBar
@@ -26,73 +23,84 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.TextView
-import android.widget.Toast
 import com.example.admin.loginguitest.DataClasses.AddressDetails
+import com.example.admin.loginguitest.DataClasses.Order
 import com.example.admin.loginguitest.R.id.emailDisplay
-import com.example.admin.loginguitest.R.id.uName
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException
-import com.google.android.gms.common.GooglePlayServicesRepairableException
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.places.GeoDataClient
-import com.google.android.gms.location.places.Place
 import com.google.android.gms.location.places.PlaceDetectionClient
-import com.google.android.gms.location.places.Places
-import com.google.android.gms.location.places.ui.PlacePicker
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.maps.DirectionsApiRequest
+import com.google.maps.GeoApiContext
+import com.google.maps.PendingResult
+import com.google.maps.model.DirectionsResult
 import kotlinx.android.synthetic.main.activity_homepage.*
-import kotlinx.android.synthetic.main.app_bar_homepage.*
-import kotlinx.android.synthetic.main.content_homepage.*
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.launch
 import java.util.*
+import kotlin.collections.ArrayList
 
 class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
+    //-----------UI Elements------------
     lateinit var emailDisplay : TextView
 
     lateinit var uName : TextView
 
+    lateinit var mDrawerLayout : DrawerLayout
+    //-----------------------------------
+
+    //------------DataBase Objects------------
     private lateinit var fbAuth : FirebaseAuth
 
     var dbRef : FirebaseFirestore = FirebaseFirestore.getInstance()
 
     var collectionReference : CollectionReference = dbRef.collection("Users")
 
-    lateinit var mDrawerLayout : DrawerLayout
+    //---------------------------------------
 
+    //-----Map and Location Objects-------
     lateinit var mMap: GoogleMap
 
     private lateinit var currentLocationRetrieve : FusedLocationProviderClient
 
     lateinit var mGeoDataClient : Geocoder
 
-    // Construct a PlaceDetectionClient
     lateinit var mPlaceDetectionClient : PlaceDetectionClient
 
-    val TAG = "MapsActivity"
+    lateinit var mGeoApiContext : GeoApiContext
 
-    var location: LatLng? = null
+    var location : LatLng? = null
 
     val PLACE_PICKER_REQUEST = 1
 
+    var mMarker : Marker? = null
+
+    var mPolyline : Polyline? = null
+
+    //-----------------------------------
+
+    //---------Data Class Objects--------
+
     lateinit var placeOrder : PlacesOrder
 
+    lateinit var orderObj : Order
+
+    lateinit var results : DirectionsResult
+
+    //-----------------------------------
+
+
     companion object {
-        var TAG = "HOMEPAGE"
+        val TAG = "HOMEPAGE"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -136,6 +144,57 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
 
         mGeoDataClient = Geocoder(this, Locale.getDefault())
 
+        if(!(::mGeoApiContext.isInitialized)) {
+            mGeoApiContext = GeoApiContext.Builder()
+                    .apiKey("AIzaSyAd2R1rT8L7h5vOZpDHsnuEMSteFVL9Kdk").build()
+        }
+    }
+
+    fun calculateDirections(dest : LatLng, placeOrder : Any){
+
+        var destin : com.google.maps.model.LatLng
+                = com.google.maps.model.LatLng(dest.latitude, dest.longitude)
+
+        var userLocation = getCurrentLocation()
+
+        Log.d(TAG, "calculateDirections: calculating directions.")
+
+        var directions = DirectionsApiRequest(mGeoApiContext)
+
+        directions.alternatives(true)
+        directions.origin(com.google.maps.model.LatLng(userLocation.latitude, userLocation.longitude))
+
+        Log.d(TAG, "calculateDirections: destination: " + destin.toString())
+
+        directions.destination(destin).setCallback(object: PendingResult.Callback<DirectionsResult> {
+
+            override fun onResult(result:DirectionsResult) {
+
+                Log.d(TAG, "calculateDirections: routes: " + result.routes[0].toString())
+                Log.d(TAG, "calculateDirections: duration: " + result.routes[0].legs[0].duration)
+                Log.d(TAG, "calculateDirections: distance: " + result.routes[0].legs[0].distance)
+                Log.d(TAG, "calculateDirections: geocodedWayPoints: " + result.geocodedWaypoints[0].toString())
+
+                if(placeOrder is PlacesOrder) {
+                    placeOrder.result = result
+
+                    placeOrder.homepage.runOnUiThread(object : Runnable{
+
+                        override fun run() {
+                            placeOrder.setDestinationDetails()
+                        }
+                    })
+                }
+            }
+
+            override fun onFailure(e:Throwable) {
+
+                Log.e(TAG, "calculateDirections: Failed to get directions: " + e.message)
+
+                e.printStackTrace()
+            }
+        })
+
     }
 
 
@@ -151,7 +210,7 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         collectionReference
                 .whereEqualTo("email", fbAuth.currentUser!!.email)
                 .get()
-                .addOnCompleteListener( OnCompleteListener<QuerySnapshot> { task ->
+                .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         for (document in task.result!!) {
                             Log.d(TAG, document.id + " => " + document.data)
@@ -160,8 +219,7 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.exception)
                     }
-                })
-
+                }
 
     }
 
@@ -183,13 +241,6 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        /*
-        when (item.itemId) {
-            //R.id.action_settings -> return true
-            else ->
-            return super.onOptionsItemSelected(item)
-        }
-        */
 
         return when (item.itemId) {
             android.R.id.home -> {
@@ -260,8 +311,11 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
     }
 
     fun getCurrentAddress() : AddressDetails{
+
         lateinit var addressObj : AddressDetails
         lateinit var lLocation  : LatLng
+
+        var mGeoDataClient = Geocoder(this, Locale.getDefault())
 
         if(mMap.myLocation != null){
             lLocation = LatLng(mMap.myLocation.latitude, mMap.myLocation.longitude)
@@ -302,13 +356,13 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
             mMap.uiSettings.isMyLocationButtonEnabled = true
 
 
-            Log.d(TAG, "Permission to pull map location granted")
+            Log.d(TAG, "Permission to pull map source granted")
 
             return true
         }
 
         else {
-            Log.d(TAG, "Permission for location not granted")
+            Log.d(TAG, "Permission for source not granted")
 
             ActivityCompat.requestPermissions(this, arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION), 200)
         }
@@ -363,6 +417,14 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
 
         hideMap()
 
+        if(mMarker != null)
+            mMarker!!.remove()
+
+
+        if(mPolyline != null)
+            mPolyline!!.remove()
+
+
         var fragM = PlacesOrder()
 
         fragM.testVal = "This is a very simple test"
@@ -383,30 +445,28 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                var place = PlacePicker.getPlace(data, this)
-                var toastMsg = String.format("Place: %s", place.name)
+    fun returnOrder(view : View, order : Order){
+        this.orderObj = order
+        this.results = placeOrder.result
 
-                addMarker(place.latLng, place.name.toString())
-                moveCamera(place.latLng, 14f)
+        placeOrderCancelButton(view)
 
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show()
+        var polyList : MutableList<LatLng> = ArrayList<LatLng>()
 
-                var current = LatLng(mMap.myLocation.latitude, mMap.myLocation.longitude)
-
-                var order = Order(uName.text.toString(), emailDisplay.text.toString(),
-                        current, place.latLng, place.name.toString())
-
-                var intent : Intent = Intent(this, OrderConfirm :: class.java)
-
-                intent.putExtra("orderObject", order)
-
-                startActivity(intent)
-
-            }
+        for(each in results.routes[0].overviewPolyline.decodePath()){
+            polyList.add(LatLng(each.lat, each.lng))
         }
+
+        mPolyline = mMap.addPolyline((PolylineOptions())
+                .clickable(true).addAll(polyList).color(Color.BLUE).width(6f))
+
+        mMarker = mMap.addMarker(MarkerOptions().position(order.destination).title(order.destinationName))
+
+
+        var halfPoint : Int = polyList.size / 2
+
+        moveCamera(polyList[halfPoint], 8f)
+
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -421,6 +481,13 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
                     catch(e : SecurityException){ Log.d(TAG, e.message)}
                 }
             }
+        }
+    }
+
+    var mHandler : Handler = object : Handler(Looper.getMainLooper()){
+
+        override fun handleMessage(msg : Message){
+            placeOrder.setDestinationDetails()
         }
     }
 }

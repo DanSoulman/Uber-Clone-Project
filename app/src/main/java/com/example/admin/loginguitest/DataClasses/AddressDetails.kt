@@ -1,12 +1,12 @@
 package com.example.admin.loginguitest.DataClasses
 
-class AddressDetails(address : String, area : String, city : String, country : String, postalCode : String){
+class AddressDetails(address : String?, area : String?, city : String?, country : String?, postalCode : String?){
 
-    lateinit var mAddress : String
-    lateinit var mArea : String
-    lateinit var mCity : String
-    lateinit var mCountry : String
-    lateinit var mPostalCode : String
+    var mAddress : String?
+    var mArea : String?
+    var mCity : String?
+    var mCountry : String?
+    var mPostalCode : String?
 
     init{
 
