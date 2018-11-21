@@ -16,6 +16,16 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.*
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.AuthResult
+import com.google.android.gms.tasks.Task
+import android.support.annotation.NonNull
+import android.support.v4.app.FragmentActivity
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.AuthCredential
+
+
 
 
 class SignUpController : AppCompatActivity() {
@@ -30,6 +40,7 @@ class SignUpController : AppCompatActivity() {
     lateinit var twitter: Button
 
     lateinit var name: String
+    private val RC_SIGN_IN = 1
 
     //TODO: add variable to store number
 
@@ -167,7 +178,7 @@ class SignUpController : AppCompatActivity() {
 
         return false
     }
-    /*
+
     //LOGGING IN THROUGH GOOGLE PLUS --------------------------------------------
     fun signUpViaGoogle(v: View) {
         // Configure sign-in to request the user's ID, email address, and basic
@@ -176,76 +187,60 @@ class SignUpController : AppCompatActivity() {
         Log.d(TAG, "Signing up Via Google")
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
+                //TODO: FIX This one bastard of a line by putting WebID in somewhere
+                //.requestIdToken("146078760213-01dddiigen9ds5a13it2qbokshd89jer.apps.googleusercontent.com")
                 //Client ID WebClient 146078760213-01dddiigen9ds5a13it2qbokshd89jer.apps.googleusercontent.com
                 //App 146078760213-v5evi53aeuckik8hnapcp835altrghtu.apps.googleusercontent.com
                 .requestEmail()
                 .build()
 
+
         // Build a GoogleSignInClient with the options specified by gso.
         var mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
         val signInIntent = mGoogleSignInClient.signInIntent
+
+
         startActivityForResult(signInIntent, RC_SIGN_IN)
 
-
     }
-    */
 
-    //private fun signInGoogle() {  Moved above, commented out just in case, Android Studio being weird
-    //    val signInIntent = mGoogleSignInClient.signInIntent
-    //    startActivityForResult(signInIntent, RC_SIGN_IN)
-    //}
 
-    /*
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                val account = task.getResult(ApiException::class.java)
-                firebaseAuthWithGoogle(account!!)
-            } catch (e: ApiException) {
-                // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e)
-                // ...
-            }
+            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleSignInResult(task)
+        } else {
+            Toast.makeText(this, "Problem in execution order :(", Toast.LENGTH_LONG).show()
         }
     }
-    */
 
-    //TODO: Ask Jamie where I put this, not sure I need it
-    /*public override fun onStart() {
-    super.onStart()
-    // Check if user is signed in (non-null) and update UI accordingly.
-    val currentUser = auth.currentUser
-    updateUI(currentUser)
-}
-*/
-
-    private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.id!!)
-
-        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
-        fb.signInWithCredential(credential)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithCredential:success")
-                        val user = fb.currentUser
-                        //updateUI(user)
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithCredential:failure", task.exception)
-                        //Snackbar.make(main_layout, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
-                        //updateUI(null)
-                    }
-
-                    // ...
-                }
+    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+        try {
+            val account: GoogleSignInAccount = completedTask.getResult(ApiException::class.java)!!
+            updateUI(account)
+        } catch (e: ApiException) {
+            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
+        }
     }
 
+    private fun updateUI(user: GoogleSignInAccount?) {
+
+        val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
+        if (acct != null) {
+            val personName = acct.displayName
+            val personGivenName = acct.givenName
+            val personFamilyName = acct.familyName
+            val personEmail = acct.email
+            val personId = acct.id
+            val personPhoto = acct.photoUrl
+
+            Toast.makeText(this, "Name of the user :$personName user id is : $personId", Toast.LENGTH_SHORT).show()
+
+        }
+
+
+    }
     private fun clearText() {
         nameTextField.text = ""
         emailTextField.text = ""
