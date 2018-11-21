@@ -21,11 +21,11 @@ import com.google.firebase.auth.AuthResult
 import com.google.android.gms.tasks.Task
 import android.support.annotation.NonNull
 import android.support.v4.app.FragmentActivity
+import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.AuthCredential
-
-
+import com.google.firebase.firestore.CollectionReference
 
 
 class SignUpController : AppCompatActivity() {
@@ -45,6 +45,17 @@ class SignUpController : AppCompatActivity() {
     //TODO: add variable to store number
 
     lateinit var fb: FirebaseAuth
+
+    var collectionReference : CollectionReference = dbRef.collection("Users")
+
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            //.requestIdToken(getString(R.string.default_web_client_id))
+            //TODO: FIX This one bastard of a line by putting WebID in somewhere
+            .requestIdToken("146078760213-01dddiigen9ds5a13it2qbokshd89jer.apps.googleusercontent.com")
+            //Client ID WebClient 146078760213-01dddiigen9ds5a13it2qbokshd89jer.apps.googleusercontent.com
+            //App 146078760213-v5evi53aeuckik8hnapcp835altrghtu.apps.googleusercontent.com
+            .requestEmail()
+            .build()
 
     companion object {
         var TAG = "SignUpActivity"
@@ -185,18 +196,10 @@ class SignUpController : AppCompatActivity() {
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
 
         Log.d(TAG, "Signing up Via Google")
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                //TODO: FIX This one bastard of a line by putting WebID in somewhere
-                //.requestIdToken("146078760213-01dddiigen9ds5a13it2qbokshd89jer.apps.googleusercontent.com")
-                //Client ID WebClient 146078760213-01dddiigen9ds5a13it2qbokshd89jer.apps.googleusercontent.com
-                //App 146078760213-v5evi53aeuckik8hnapcp835altrghtu.apps.googleusercontent.com
-                .requestEmail()
-                .build()
-
 
         // Build a GoogleSignInClient with the options specified by gso.
         var mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+        mGoogleSignInClient.signOut()
         val signInIntent = mGoogleSignInClient.signInIntent
 
 
@@ -204,12 +207,12 @@ class SignUpController : AppCompatActivity() {
 
     }
 
-
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_SIGN_IN) {
             val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
+
         } else {
             Toast.makeText(this, "Problem in execution order :(", Toast.LENGTH_LONG).show()
         }
@@ -218,33 +221,71 @@ class SignUpController : AppCompatActivity() {
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account: GoogleSignInAccount = completedTask.getResult(ApiException::class.java)!!
-            updateUI(account)
+
+            firebaseAuthWithGoogle(account)
+
         } catch (e: ApiException) {
             Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun updateUI(user: GoogleSignInAccount?) {
-
-        val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
-        if (acct != null) {
-            val personName = acct.displayName
-            val personGivenName = acct.givenName
-            val personFamilyName = acct.familyName
-            val personEmail = acct.email
-            val personId = acct.id
-            val personPhoto = acct.photoUrl
-
-            Toast.makeText(this, "Name of the user :$personName user id is : $personId", Toast.LENGTH_SHORT).show()
-
-        }
-
-
-    }
     private fun clearText() {
         nameTextField.text = ""
         emailTextField.text = ""
         passwordTextField.text = ""
         passwordTextField1.text = ""
+    }
+
+    private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
+        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.id!!)
+
+        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
+        fb.signInWithCredential(credential)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithCredential:success")
+                        val user = fb.currentUser
+
+                        collectionReference
+                                .whereEqualTo("email", user!!.email)
+                                .get()
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        /*
+                                        for (document in task.result!!) {
+                                            Log.d(TAG, document.id + " => " + document.data)
+                                            //uName.text = document.data.getValue("name").toString()
+                                        }
+                                        */
+                                        var dataToSave : MutableMap<String, String> = HashMap<String, String>()
+
+                                        if(task.result!!.size() < 1){
+                                            dataToSave.put("name", acct.displayName!!)
+                                            dataToSave.put("email", fb.currentUser!!.email!!)
+
+                                            dbRef.collection("Users").add(dataToSave as Map<String, String>)
+                                                    .addOnSuccessListener{
+                                                        Log.d("QueryDB", "Task Succeeded inserted user into collection")
+                                                    }
+
+                                        }
+
+                                        else
+                                            Log.d("QueryDB", "Task succeeded but no documents returned")
+                                    } else {
+                                        Log.d("QueryDB", "Error getting documents: ", task.exception)
+                                    }
+                                }
+
+                    } else {
+
+                        Log.w(TAG, "signInWithCredential:failure", task.exception)
+
+                        Toast.makeText(this, "Authentication Failed.", Toast.LENGTH_SHORT).show()
+
+                    }
+
+                }
     }
 }

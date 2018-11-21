@@ -95,12 +95,12 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         collectionReference
                 .whereEqualTo("email", fbAuth.currentUser!!.email)
                 .get()
-                .addOnSuccessListener (){  }
+                .addOnSuccessListener (){ }
 
         collectionReference
                 .whereEqualTo("email", fbAuth.currentUser!!.email)
                 .get()
-                .addOnCompleteListener( OnCompleteListener<QuerySnapshot> { task ->
+                .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         for (document in task.result!!) {
                             Log.d(TAG, document.id + " => " + document.data)
@@ -109,7 +109,7 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.exception)
                     }
-                })
+                }
 
 
     }

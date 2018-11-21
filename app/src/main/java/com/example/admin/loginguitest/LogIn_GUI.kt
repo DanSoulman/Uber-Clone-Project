@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import java.sql.ResultSet
@@ -38,6 +39,15 @@ class LogIn_GUI : AppCompatActivity() {
         passwordTextField = findViewById(R.id.PasswordField) as TextView
 
         fbAuth = FirebaseAuth.getInstance()
+
+        if(fbAuth.currentUser != null){
+            fbAuth.signOut()
+        }
+
+
+        if(fbAuth.currentUser != null) Log.d(TAG, "currentUser is " + fbAuth.currentUser!!.email)
+
+        else Log.d(TAG, "currentUser is null")
     }
 
     fun logInHandler(v : View){
