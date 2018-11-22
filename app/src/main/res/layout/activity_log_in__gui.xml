@@ -139,8 +139,17 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView3" />
             </LinearLayout>
-
+            <Button
+                android:id="@+id/twitter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:clickable="true"
+                android:onClick="signUpViaGoogle"
+                android:text="Log In Using Google+"
+                android:textStyle="bold" />
         </LinearLayout>
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

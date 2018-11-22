@@ -40,12 +40,12 @@ class SignUpController : AppCompatActivity() {
     lateinit var twitter: Button
 
     lateinit var name: String
-    private val RC_SIGN_IN = 1
+
 
     //TODO: add variable to store number
 
     lateinit var fb: FirebaseAuth
-
+    var dbRef: FirebaseFirestore = FirebaseFirestore.getInstance()
     var collectionReference : CollectionReference = dbRef.collection("Users")
 
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -59,7 +59,6 @@ class SignUpController : AppCompatActivity() {
 
     companion object {
         var TAG = "SignUpActivity"
-        var dbRef: FirebaseFirestore = FirebaseFirestore.getInstance()
     }
 
     //TODO: Add the Mobile number Info here
@@ -190,44 +189,7 @@ class SignUpController : AppCompatActivity() {
         return false
     }
 
-    //LOGGING IN THROUGH GOOGLE PLUS --------------------------------------------
-    fun signUpViaGoogle(v: View) {
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
 
-        Log.d(TAG, "Signing up Via Google")
-
-        // Build a GoogleSignInClient with the options specified by gso.
-        var mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-        mGoogleSignInClient.signOut()
-        val signInIntent = mGoogleSignInClient.signInIntent
-
-
-        startActivityForResult(signInIntent, RC_SIGN_IN)
-
-    }
-
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RC_SIGN_IN) {
-            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
-            handleSignInResult(task)
-
-        } else {
-            Toast.makeText(this, "Problem in execution order :(", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
-        try {
-            val account: GoogleSignInAccount = completedTask.getResult(ApiException::class.java)!!
-
-            firebaseAuthWithGoogle(account)
-
-        } catch (e: ApiException) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
-        }
-    }
 
     private fun clearText() {
         nameTextField.text = ""
@@ -236,56 +198,5 @@ class SignUpController : AppCompatActivity() {
         passwordTextField1.text = ""
     }
 
-    private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.id!!)
 
-        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
-        fb.signInWithCredential(credential)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithCredential:success")
-                        val user = fb.currentUser
-
-                        collectionReference
-                                .whereEqualTo("email", user!!.email)
-                                .get()
-                                .addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        /*
-                                        for (document in task.result!!) {
-                                            Log.d(TAG, document.id + " => " + document.data)
-                                            //uName.text = document.data.getValue("name").toString()
-                                        }
-                                        */
-                                        var dataToSave : MutableMap<String, String> = HashMap<String, String>()
-
-                                        if(task.result!!.size() < 1){
-                                            dataToSave.put("name", acct.displayName!!)
-                                            dataToSave.put("email", fb.currentUser!!.email!!)
-
-                                            dbRef.collection("Users").add(dataToSave as Map<String, String>)
-                                                    .addOnSuccessListener{
-                                                        Log.d("QueryDB", "Task Succeeded inserted user into collection")
-                                                    }
-
-                                        }
-
-                                        else
-                                            Log.d("QueryDB", "Task succeeded but no documents returned")
-                                    } else {
-                                        Log.d("QueryDB", "Error getting documents: ", task.exception)
-                                    }
-                                }
-
-                    } else {
-
-                        Log.w(TAG, "signInWithCredential:failure", task.exception)
-
-                        Toast.makeText(this, "Authentication Failed.", Toast.LENGTH_SHORT).show()
-
-                    }
-
-                }
-    }
 }

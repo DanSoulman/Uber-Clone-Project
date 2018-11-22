@@ -131,15 +131,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp" />
 
-        <Button
-            android:id="@+id/twitter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:clickable="true"
-            android:onClick="signUpViaGoogle"
-            android:text="Log In Using Google+"
-            android:textStyle="bold" />
+
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
