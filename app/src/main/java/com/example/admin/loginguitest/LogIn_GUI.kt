@@ -5,9 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -34,6 +32,8 @@ class LogIn_GUI : AppCompatActivity() {
     private lateinit var fbAuth     : FirebaseAuth
     var dbRef: FirebaseFirestore = FirebaseFirestore.getInstance()
     var collectionReference : CollectionReference = dbRef.collection("Users")
+
+    var dataToSave : MutableMap<String, String> = HashMap<String, String>()
 
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             //.requestIdToken(getString(R.string.default_web_client_id))
@@ -211,27 +211,46 @@ class LogIn_GUI : AppCompatActivity() {
                                             //uName.text = document.data.getValue("name").toString()
                                         }
                                         */
-                                        var dataToSave : MutableMap<String, String> = HashMap<String, String>()
 
                                         if(task.result!!.size() < 1){
+
+                                            Log.d("QueryDB", "Task succeeded user doesn't exist")
+
+                                            emailTextField.visibility = View.INVISIBLE
+                                            passwordTextField.visibility = View.INVISIBLE
+                                            loginButton.visibility = View.INVISIBLE
+
+                                            var signUpRel = findViewById<RelativeLayout>(R.id.signUpRel)
+
+                                            //signUpRel.visibility = View.INVISIBLE
+
                                             dataToSave.put("name", acct.displayName!!)
                                             dataToSave.put("email", fbAuth.currentUser!!.email!!)
+                                            dataToSave.put("balance", "0")
 
-                                            collectionReference.add(dataToSave as Map<String, String>)
-                                                    .addOnSuccessListener{
-                                                        Log.d("QueryDB", "Task Succeeded inserted user into collection")
-                                                    }
+                                            var signInFrag = sign_in_google_frag()
+                                            signInFrag.login = this
+
+                                            var fm = supportFragmentManager.beginTransaction()
+
+                                            fm.replace(R.id.mobileOverlay, signInFrag)
+                                                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                                                    .commit()
 
                                         }
 
-                                        else
-                                            Log.d("QueryDB", "Task succeeded but no documents returned")
+                                        else {
+                                            Log.d("QueryDB", "Task succeeded user already exists")
+                                            var intent = Intent(this, homepage::class.java)
+                                            startActivity(intent)
+                                        }
                                     } else {
                                         Log.d("QueryDB", "Error getting documents: ", task.exception)
                                     }
                                 }
 
-                    } else {
+                    }
+                    else {
 
                         Log.w(TAG, "signInWithCredential:failure", task.exception)
 

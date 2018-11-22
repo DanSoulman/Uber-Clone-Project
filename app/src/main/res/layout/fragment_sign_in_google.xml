@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".sign_in_google_frag"
+    android:background="#66000000">
+
+    <RelativeLayout
+        android:layout_width="253dp"
+        android:layout_height="340dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/common_google_signin_btn_icon_light_normal_background">
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp"
+            android:text="Hi There!"
+            android:textColor="@color/colorAccent"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            tools:text="Hi There!" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="181dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="69dp"
+            android:text="We've noticed this is your first time signing in with us"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="We've noticed this is your first time signing in with us" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="181dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="123dp"
+            android:text="Please enter your phone number below"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="Please enter your phone number below" />
+
+        <EditText
+            android:id="@+id/mobileEditText"
+            android:layout_width="181dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="100dp"
+            android:background="@drawable/common_google_signin_btn_icon_dark_normal_background"
+            android:ems="10"
+            android:hint="0876543210"
+            android:inputType="phone"
+            android:singleLine="true"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/mobileButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="33dp"
+            android:background="@drawable/button_bg_rounded_corners_red"
+            android:text="Submit"
+            android:textColor="#FFFFFFFF"
+            tools:text="Submit" />
+
+
+    </RelativeLayout>
+
+
+    <!-- TODO: Update blank fragment layout -->
+
+</RelativeLayout>

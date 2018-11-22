@@ -13,6 +13,26 @@
         android:orientation="horizontal"></LinearLayout>
         -->
 
+    <ImageView
+        android:id="@+id/googleSignIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="71dp"
+        android:onClick="signUpViaGoogle"
+        app:srcCompat="@drawable/common_google_signin_btn_icon_light" />
+
+    <FrameLayout
+        android:id="@+id/mobileOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+
+    </FrameLayout>
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -84,6 +104,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="0dp"
         android:layout_marginBottom="0dp"
+        android:id = "@+id/signUpRel"
         android:background="@color/colorPrimaryDark">
 
         <TextView

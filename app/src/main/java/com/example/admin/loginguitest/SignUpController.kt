@@ -37,7 +37,6 @@ class SignUpController : AppCompatActivity() {
 
     lateinit var submit: Button
     lateinit var facebook: Button
-    lateinit var twitter: Button
 
     lateinit var name: String
 
@@ -47,15 +46,6 @@ class SignUpController : AppCompatActivity() {
     lateinit var fb: FirebaseAuth
     var dbRef: FirebaseFirestore = FirebaseFirestore.getInstance()
     var collectionReference : CollectionReference = dbRef.collection("Users")
-
-    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            //.requestIdToken(getString(R.string.default_web_client_id))
-            //TODO: FIX This one bastard of a line by putting WebID in somewhere
-            .requestIdToken("146078760213-01dddiigen9ds5a13it2qbokshd89jer.apps.googleusercontent.com")
-            //Client ID WebClient 146078760213-01dddiigen9ds5a13it2qbokshd89jer.apps.googleusercontent.com
-            //App 146078760213-v5evi53aeuckik8hnapcp835altrghtu.apps.googleusercontent.com
-            .requestEmail()
-            .build()
 
     companion object {
         var TAG = "SignUpActivity"
@@ -182,14 +172,13 @@ class SignUpController : AppCompatActivity() {
         if (nameTextField.text.isBlank() || emailTextField.text.isBlank() || passwordTextField.text.isBlank() || passwordTextField1.text.isBlank()) {
             Toast.makeText(baseContext, "Please do not leave ANY field Empty.", Toast.LENGTH_SHORT).show()
             clearText()
+
             return true
 
         }
 
         return false
     }
-
-
 
     private fun clearText() {
         nameTextField.text = ""
