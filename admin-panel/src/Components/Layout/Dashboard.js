@@ -10,16 +10,10 @@ export default () =>{
         <div className="test">
             <div className="col-md-10">
                <Trips />
+               <Vehicle />
             </div>
             <div className="col-md-2">
                 <Sidebar />
-            </div>
-        </div>
-        <br />
-        <br />
-        <div className="test">
-            <div className="col-md-10">
-                <Vehicle />
             </div>
         </div>
       </div>
