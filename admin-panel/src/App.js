@@ -23,7 +23,7 @@ class App extends Component {
          <div className="App">
            <Navigation />
            <div className="container">
-           <Particles className="particles"
+            <Particles className="particles"
              params={particleOptions}
             />
             <Switch>

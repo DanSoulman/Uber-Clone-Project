@@ -136,9 +136,21 @@ import './TripDetails.css';
                      </div>
                         <hr />
                         <div className="card">
-                            <h3 className="card-header align">
-                                {user.name}
-                            </h3>
+                          <div className = "card-header">
+                            <div className = "col-md-8 col-sm-6 align">
+                                <h3>
+                                    {user.name}
+                                </h3>
+                            </div>
+                            <div className="col-md-2 col-sm-6">
+                                <h5 className = "pull-right">
+                                    Customer Balance: <span className={classnames({
+                                                'text-success':user.balance>0,
+                                                'text-danger': user.balance === 0
+                                            })}>${parseFloat(user.balance).toFixed(2)}</span>
+                                </h5>
+                            </div>
+                          </div>
                         <div className="card-body">
                             <div className="row">
                                 <div className="col-md-8 col-sm-6 align">
@@ -235,9 +247,21 @@ import './TripDetails.css';
                         </div>
                         <hr />
                         <div className="card">
-                            <h3 className="card-header align">
-                                {user.name}
-                            </h3>
+                        <div className = "card-header">
+                            <div className = "col-md-8 col-sm-6 align">
+                                <h3>
+                                    {user.name}
+                                </h3>
+                            </div>
+                            <div className="col-md-2 col-sm-6">
+                                <h5 className = "pull-right">
+                                    Customer Balance: <span className={classnames({
+                                                'text-success':user.balance>0,
+                                                'text-danger': user.balance === 0
+                                            })}>${parseFloat(user.balance).toFixed(2)}</span>
+                                </h5>
+                            </div>
+                          </div>
                         <div className="card-body">
                             <div className="row">
                                 <div className="col-md-8 col-sm-6 align">

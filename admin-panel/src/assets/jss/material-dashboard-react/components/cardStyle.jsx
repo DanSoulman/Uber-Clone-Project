@@ -5,7 +5,7 @@ const cardStyle = {
     marginTop: "30px",
     borderRadius: "6px",
     color: "rgba(0, 0, 0, 0.87)",
-    background: "#fff",
+    background: "#c9d1dc",
     width: "100%",
     boxShadow: "0 1px 4px 0 rgba(0, 0, 0, 0.14)",
     position: "relative",
