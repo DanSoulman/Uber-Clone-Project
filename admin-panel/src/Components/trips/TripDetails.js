@@ -136,20 +136,16 @@ import './TripDetails.css';
                      </div>
                         <hr />
                         <div className="card">
-                          <div className = "card-header">
-                            <div className = "col-md-8 col-sm-6 align">
+                          <div className = "card-header dis">
                                 <h3>
                                     {user.name}
                                 </h3>
-                            </div>
-                            <div className="col-md-2 col-sm-6">
                                 <h5 className = "pull-right">
                                     Customer Balance: <span className={classnames({
                                                 'text-success':user.balance>0,
                                                 'text-danger': user.balance === 0
                                             })}>${parseFloat(user.balance).toFixed(2)}</span>
                                 </h5>
-                            </div>
                           </div>
                         <div className="card-body">
                             <div className="row">
@@ -183,8 +179,8 @@ import './TripDetails.css';
                                
                             <hr />
                             <ul className="list-group">
-                                <li className="list-group-item align">Contact Email: {user.email}</li>
-                                <li className="list-group-item align">Contact Phone: {user.phone}</li>
+                                <li className="list-group-item align"><strong>Contact Email: {user.email}</strong></li>
+                                <li className="list-group-item align"><strong>Contact Phone: {user.phone}</strong></li>
                             </ul>
 
                             <hr />
@@ -206,8 +202,9 @@ import './TripDetails.css';
 
                             <hr />
                             <ul className="list-group">
-                                <li className="list-group-item align">Make: {vehicle.make}</li>
-                                <li className="list-group-item align">Model: {vehicle.model}</li>
+                                <li className="list-group-item align"><strong>Registration: {vehicle.registration}</strong></li>
+                                <li className="list-group-item align"><strong>Make: {vehicle.make}</strong></li>
+                                <li className="list-group-item align"><strong>Model: {vehicle.model}</strong></li>
                             </ul>
                         </div>
                         <div className="row">
@@ -247,20 +244,16 @@ import './TripDetails.css';
                         </div>
                         <hr />
                         <div className="card">
-                        <div className = "card-header">
-                            <div className = "col-md-8 col-sm-6 align">
-                                <h3>
-                                    {user.name}
-                                </h3>
-                            </div>
-                            <div className="col-md-2 col-sm-6">
-                                <h5 className = "pull-right">
+                        <div className = "card-header dis">
+                            <h3>
+                              {user.name}
+                            </h3>
+                            <h5 className = "pull-right">
                                     Customer Balance: <span className={classnames({
                                                 'text-success':user.balance>0,
                                                 'text-danger': user.balance === 0
                                             })}>${parseFloat(user.balance).toFixed(2)}</span>
-                                </h5>
-                            </div>
+                            </h5>
                           </div>
                         <div className="card-body">
                             <div className="row">
@@ -288,8 +281,8 @@ import './TripDetails.css';
 
                             <hr />
                             <ul className="list-group">
-                                <li className="list-group-item align">Contact Email: {user.email}</li>
-                                <li className="list-group-item align">Contact Phone: {user.phone}</li>
+                                <li className="list-group-item align"><strong>Contact Email: {user.email}</strong></li>
+                                <li className="list-group-item align"><strong>Contact Phone: {user.phone}</strong></li>
                             </ul>
 
                             <hr />
@@ -311,8 +304,9 @@ import './TripDetails.css';
 
                             <hr />
                             <ul className="list-group">
-                                <li className="list-group-item align">Make: {vehicle.make}</li>
-                                <li className="list-group-item align">Model: {vehicle.model}</li>
+                                <li className="list-group-item align"><strong>Registration: {vehicle.registration}</strong></li>
+                                <li className="list-group-item align"><strong>Make: {vehicle.make}</strong></li>
+                                <li className="list-group-item align"><strong>Model: {vehicle.model}</strong></li>
                             </ul>
 
 

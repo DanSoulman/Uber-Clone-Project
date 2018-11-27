@@ -18,24 +18,38 @@ import './VehicleDetails.css';
                return (
                     <div>
                         <div className="test">
+
                             <div className="col-md-6">
                                 <Link to="/" className="btn btn-link align">
                                     <i className="fas fa-arrow-circle-left"></i>{' '}Back to Dashboard
                                 </Link>
-                            </div>  
-                            <div className="col-md-6">
-                            <div className="btn-group float-right">
-                                <Link to={{pathname:`/vehicle/edit/${vehicle.id}`, state: {vehicle: vehicle} }} className="btn btn-dark">
-                                    Edit
-                                </Link>
                             </div>
-                        </div>              
+
+                            <div className="col-md-6">
+                                <div className="btn-group float-right">
+                                    <Link to={{pathname:`/vehicle/edit/${vehicle.id}`, state: {vehicle: vehicle} }} className="btn btn-dark">
+                                        Edit
+                                    </Link>
+                                </div>
+                            </div>
                         </div>
+
                         <hr />
+
                         <div className="card">
-                            <h3 className="card-header align">
-                                {vehicle.id}
-                            </h3>
+                        <div className = "card-header dis">
+                                <h3>
+                                    {vehicle.id}
+                                </h3>
+                                <h5 className = "pull-right">
+                                    Rated <span className={classnames({
+                                                'text-success':(parseFloat(vehicle.rating)>4.2),
+                                                'text-danger': (parseFloat(vehicle.rating)<4.0)})}>
+                                                ${parseFloat(vehicle.rating).toFixed(2)+' '}</span>
+                                    stars
+                                </h5>
+                        </div>
+
                         <div className="card-body">
                             <div className="row">
                                 <div className="col-md-8 col-sm-6 align">
@@ -44,19 +58,21 @@ import './VehicleDetails.css';
                                     </h4> 
                                 </div>
                                 <div className="col-md-4 col-sm-6 align">
-                                    <h3 className="pull-right">
+                                    <h4 className="pull-right">
                                         Needs Maintenance?: <span className={classnames({
                                             'text-danger':vehicle.maintenance==="false",
                                             'text-success': vehicle.maintenance === "true"
                                         })}>{vehicle.maintenance.toUpperCase()}</span>
-                                    </h3>
+                                    </h4>
                                 </div>
                             </div>
 
                             <hr />
+
                             <ul className="list-group">
-                                <li className="list-group-item align">Make: {vehicle.make}</li>
-                                <li className="list-group-item align">Model: {vehicle.model}</li>
+                                <li className="list-group-item align"><strong>Registration: {vehicle.registration}</strong></li>
+                                <li className="list-group-item align"><strong>Make: {vehicle.make}</strong></li>
+                                <li className="list-group-item align"><strong>Model: {vehicle.model}</strong></li>
                             </ul>
                         </div>
                         <div className="row">

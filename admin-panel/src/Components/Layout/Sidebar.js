@@ -10,27 +10,58 @@ import CardBody from "../Card/CardBody.jsx";
 import Spinner from '../layout/Spinner';
 
 class Sidebar extends React.Component{
+constructor(props){
+  super(props);
+
+  this.costInput = React.createRef();
+}
+
+
+costSubmit = e => {
+  e.preventDefault();
+  
+  const {settings, firestore, history} = this.props;
+
+  const updateSettings = {
+      costpermile: this.costInput.current.value
+  };
+  //Update in Firestore
+  firestore.update({collection: 'settings', doc: settings.id}, 
+                    updateSettings).then(history.push('/'));
+};
+
   render(){
-    const {user} = this.props;
-    if(user){
-      console.log(user);
+    const {user, settings, Vehicles} = this.props;
+    console.log(this.props);
+    if(user && settings && Vehicles){
+      console.log(this.props);
       var top_user_index=0;
+      var top_car_index=0;
+      var top_car = 0;
       var top_trips = 0;
       for(var i = 0; i < user.length; i++){
         if(user[i].trips > top_trips ){
             top_user_index = i;
             top_trips = user[i].trips;
         }
+      for(i = 0; i<Vehicles.length; i++){
+        if(Vehicles[i].rating > top_car){
+          top_car_index = i;
+          top_car = Vehicles[i].rating;
+        }
+      }
       }
       var top_customer = user[top_user_index];
-      console.log(top_customer);
-      if(top_customer != null && user.length > 1 )
+      top_car = Vehicles[top_car_index];
+      if(top_customer != null && user.length > 1 && settings.length ===1 && Vehicles.length >= 1 ){
         return (
           <div>
+
               <Link to="/" className="btn btn-success btn-block">
                 <i className="fas fa-refresh"/>Refresh
               </Link>
-              <Card style = {{width: "20rem"}}>
+
+              <Card style = {{width: "22rem"}}>
                 <CardBody>
                   <h4>
                       {' '}
@@ -39,13 +70,62 @@ class Sidebar extends React.Component{
                   <h5>
                      <strong> {top_customer.name}</strong>
                   </h5>
+                  <h6>
+                    <strong>{top_customer.trips+' '}Trips</strong>
+                  </h6>
                   <Link to={`/trip/edit/${top_customer.id}`}>
                     <Button color="info">More Details</Button>
                    </Link>
                 </CardBody>
               </Card>
+
+              <Card style = {{width: "22rem"}}>
+                <CardBody>
+                <form onSubmit={this.costSubmit}>
+                 <div className="input-group">
+                  <label htmlFor="registration"><h5>Cost Per Mile</h5></label>{' '}
+                      <input 
+                          type = "text"
+                          className="form-control"
+                          name="costeUpdateAmount"
+                          required
+                          defaultValue = {settings[0].costpermile}
+                          ref = {this.costInput}
+                          >
+                      </input>
+                          {/* <div className="input-group-append"> */}
+                              <input 
+                                  type="submit" 
+                                  value="Update" 
+                                  className="btn btn-outline-primary btn-sm"
+                              />
+                          {/* </div> */}
+                      </div>
+                  </form>    
+                </CardBody>                       
+              </Card>
+
+              <Card style = {{width: "22rem"}}>
+                <CardBody>
+                  <h4>
+                      {' '}
+                      <i className="fas fa-car"></i>Top Car of Month{' '}
+                  </h4> 
+                  <h5>
+                     <strong> {top_car.name}</strong>
+                  </h5>
+                  <h6>
+                    <strong>{top_car.rating+' '}Stars Average</strong>
+                  </h6>
+                  <Link to={{pathname:`/vehicle/edit/${top_car.id}`, state: {vehicle: top_car} }}>
+                    <Button color="info">More Details</Button>
+                   </Link>
+                </CardBody>
+              </Card>
+
           </div>
         );
+      }
       else{
         return <Spinner />;
       }
@@ -62,10 +142,14 @@ Sidebar.propTypes = {
 
 export default compose(
   firestoreConnect( props => [
-      {collection: 'Users', storeAs: 'user'}
+      {collection: 'Users', storeAs: 'user'},
+      {collection: 'Vehicles', storeAs: 'Vehicles' },
+      {collection: 'settings', storeAs: 'settings'}
   ]),
   connect(({firestore: {ordered}}, props) => ({
-      user: ordered.user
+      user: ordered.user,
+      settings: ordered.settings,
+      Vehicles: ordered.Vehicles
   }
 )
 )
