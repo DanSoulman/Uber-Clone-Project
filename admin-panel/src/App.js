@@ -5,7 +5,7 @@ import {Provider} from 'react-redux';
 import store from './store';
 import './App.css';
 import Navigation from './Components/layout/Navigation';
-import particleOptions from './Components/layout/Particle';
+//import particleOptions from './Components/layout/Particle';
 import Dashboard from './Components/layout/Dashboard';
 import Login from './Components/auth/Login';
 import TripDetails from './Components/trips/TripDetails';
@@ -24,7 +24,7 @@ class App extends Component {
            <Navigation />
            <div className="container">
             <Particles className="particles"
-             params={particleOptions}
+             //params={particleOptions}
             />
             <Switch>
               <Route exact path="/" component={UserIsAuthenticated(Dashboard)} />

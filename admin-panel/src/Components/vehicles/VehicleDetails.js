@@ -43,9 +43,9 @@ import './VehicleDetails.css';
                                 </h3>
                                 <h5 className = "pull-right">
                                     Rated <span className={classnames({
-                                                'text-success':(parseFloat(vehicle.rating)>4.2),
-                                                'text-danger': (parseFloat(vehicle.rating)<4.0)})}>
-                                                ${parseFloat(vehicle.rating).toFixed(2)+' '}</span>
+                                                'text-success':(parseFloat(vehicle.rating)>4.0),
+                                                'text-danger': (parseFloat(vehicle.rating)<=4.0)})}>
+                                                {parseFloat(vehicle.rating).toFixed(2)+' '}</span>
                                     stars
                                 </h5>
                         </div>

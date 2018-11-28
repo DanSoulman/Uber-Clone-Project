@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {compose} from 'redux';
@@ -9,7 +9,7 @@ import Card from "../Card/Card.jsx";
 import CardBody from "../Card/CardBody.jsx";
 import Spinner from '../layout/Spinner';
 import './Sidebar.css';
-class Sidebar extends React.Component{
+class Sidebar extends Component{
 constructor(props){
   super(props);
 
@@ -18,17 +18,17 @@ constructor(props){
 
 
 costSubmit = e => {
+  console.log(this.costInput.current.value);
   e.preventDefault();
   
-  const {settings, firestore, history} = this.props;
-
+  const {settings, firestore} = this.props;
+  console.log(settings.id);
   const updateSettings = {
       costpermile: this.costInput.current.value
-  };
+  }
   //Update in Firestore
-  firestore.update({collection: 'settings', doc: settings.id}, 
-                    updateSettings).then(history.push('/'));
-};
+  firestore.update({collection: 'settings', doc: settings[0].id},updateSettings);
+}
 
   render(){
     const {user, settings, Vehicles} = this.props;
@@ -87,23 +87,24 @@ costSubmit = e => {
                 <CardBody>
                 <form onSubmit={this.costSubmit}>
                  <div className="input-group">
-                  <label htmlFor="registration" className="align"><h5>Cost Per Mile </h5></label>
-                  {'   '}
+                  <label htmlFor="registration" className="align">
+                      <h5><i class="fas fa-hand-holding-usd"></i> Cost Per Mile </h5></label>
                       <input 
                           type = "text"
                           className="form-control"
                           name="costeUpdateAmount"
                           required
-                          defaultValue = {settings[0].costpermile}
                           ref = {this.costInput}
+                          defaultValue = {settings[0].costpermile}
                           >
                       </input>
-                      <input 
-                         type="submit" 
-                         value="Update" 
-                         className="btn btn-secondary btn-sm"
+                      </div>
+                      <input
+                        type="submit"
+                        value="Update"
+                        className="btn btn-secondary"
                       />
-                       </div>
+                      
                   </form>    
                 </CardBody>                       
               </Card>

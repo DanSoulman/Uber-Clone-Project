@@ -3,3 +3,40 @@
     align-content: center;
     padding-top: 6.5px;
 }
+
+.input-group {
+    position: relative;
+    display: block;
+    align-items: stretch;
+    width: 100%;
+}
+
+.input-group>.custom-file, .input-group>.custom-select, .input-group>.form-control {
+    position: relative;
+    flex: 1 1 auto;
+    width: 100%;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.h5, h5 {
+    font-size: 1.25rem;
+    text-align: center;
+}
+
+.Card-card-1 {
+    color: rgba(0, 0, 0, 0.87);
+    width: 100%;
+    border: 0;
+    display: flex;
+    position: relative;
+    min-width: 0;
+    word-wrap: break-word;
+    font-size: .875rem;
+    margin-top: 19px;
+    background: #c9d1dc;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+    margin-bottom: 3px;
+    border-radius: 6px;
+    flex-direction: column;
+}
