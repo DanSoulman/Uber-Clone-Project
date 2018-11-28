@@ -5,6 +5,7 @@ import {compose} from 'redux';
 import {connect} from 'react-redux';
 import {firebaseConnect} from 'react-redux-firebase';
 import './Navigation.css';
+import logo from './logo.JPG';
 
 class Navigation extends Component {
     state = {
@@ -38,8 +39,11 @@ class Navigation extends Component {
             <h2>
                 <Link to="/" className="navbar-brand">
                     {' '}
-                    <i className="fas fa-user-shield"></i>
-                    Admin Panel{' '}
+                    <img src={logo} alt="Logo Error" 
+                    style={{width: '35px',margin: 'auto', display: 'inline' }}
+                
+                />
+                       {' '} Admin Panel{'      '}
                 </Link>
             </h2>
             <button 
@@ -54,7 +58,7 @@ class Navigation extends Component {
                {isAuthenticated ? (
                    <li className="nav-item">
                    <Link to="/" className="nav-link">
-                       Dashboard
+                     <h4> Dashboard </h4>
                    </Link>
                 </li>
                ): null}
@@ -63,12 +67,12 @@ class Navigation extends Component {
                     <ul className="navbar-nav ml-auto">
                         <li className="nav-item">
                             <a href="#!" className="nav-link">
-                                {auth.email}
+                             {auth.email}
                             </a>
                         </li>
                         <li className="nav-item">
                             <a href="#!" className="nav-link" onClick={this.onLogoutClick}>
-                                Logout
+                             Logout
                             </a>
                         </li>                     
                     </ul>

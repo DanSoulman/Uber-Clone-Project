@@ -53,7 +53,7 @@ class EditClient extends Component{
                       </div>
                     </div>        
                     <div className="card">
-                      <div className="card-header"><strong>Edit Client</strong></div>
+                      <div className="card-header"><h4>Edit Client</h4></div>
                       <div className="card-body">
                         <form onSubmit={this.onSubmit}>
                           <div className="form-group align">

@@ -6,16 +6,18 @@ import './Dashboard.css';
 
 export default () =>{
   return (
-      <div>
         <div className="test">
+
             <div className="col-md-10">
                <Trips />
+               <br />
                <Vehicle />
             </div>
+
             <div className="col-md-2">
                 <Sidebar />
             </div>
+
         </div>
-      </div>
-  );
+    );
 };

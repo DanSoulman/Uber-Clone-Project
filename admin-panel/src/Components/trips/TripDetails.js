@@ -191,12 +191,12 @@ import './TripDetails.css';
                                     </h4> 
                                 </div>
                                 <div className="col-md-4 col-sm-6 align">
-                                    <h3 className="pull-right">
+                                    <h4 className="pull-right">
                                        Needs Maintenance?: <span className={classnames({
                                             'text-danger':vehicle.maintenance==="false",
                                             'text-success': vehicle.maintenance === "true"
                                         })}>{vehicle.maintenance.toUpperCase()}</span>
-                                    </h3>
+                                    </h4>
                                 </div>
                             </div>
 
@@ -293,12 +293,12 @@ import './TripDetails.css';
                                     </h4> 
                                 </div>
                                 <div className="col-md-4 col-sm-6 align">
-                                    <h3 className="pull-right">
+                                    <h4 className="pull-right">
                                         Needs Maintenance?: <span className={classnames({
                                             'text-danger':vehicle.maintenance==="false",
                                             'text-success': vehicle.maintenance === "true"
                                         })}>{vehicle.maintenance.toUpperCase()}</span>
-                                    </h3>
+                                    </h4>
                                 </div>
                             </div>
 

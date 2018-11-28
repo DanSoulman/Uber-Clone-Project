@@ -1,5 +1,6 @@
 .align {
     text-align: left;
+    display: block;
 }
 .test {
     display: flex;

@@ -2,6 +2,12 @@
         display: flex;
         flex-wrap: wrap;
         margin-right: -15px;
-        margin-left: -15px;
+        margin-left: -83px;
         margin-top: 20px;
-}
+    }
+.col-md-2 {
+        -ms-flex: 0 0 16.666667%;
+        flex: 0 0 16.666667%;
+        max-width: 16.666667%;
+        margin-top: 0px;
+    } 

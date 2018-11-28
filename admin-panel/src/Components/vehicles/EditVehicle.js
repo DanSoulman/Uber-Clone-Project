@@ -57,7 +57,7 @@ class EditVehicle extends Component{
                   </div>
                 </div>        
                 <div className="card">
-                  <div className="card-header align"><strong>Edit Vehicle:</strong></div>
+                  <div className="card-header"><h4>Edit Vehicle</h4></div>
                   <div className="card-body">
                     <form onSubmit={this.onSubmit}>
                       <div className="form-group align">
