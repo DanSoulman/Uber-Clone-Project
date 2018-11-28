@@ -66,12 +66,12 @@ class Navigation extends Component {
                 {isAuthenticated ? (
                     <ul className="navbar-nav ml-auto">
                         <li className="nav-item">
-                            <a href="#!" className="nav-link">
+                            <a href="#!" className="nav-link btn btn-outline-info">
                              {auth.email}
                             </a>
                         </li>
                         <li className="nav-item">
-                            <a href="#!" className="nav-link" onClick={this.onLogoutClick}>
+                            <a href="#!" className="nav-link btn btn-outline-secondary" onClick={this.onLogoutClick}>
                              Logout
                             </a>
                         </li>                     
