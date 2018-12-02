@@ -1,6 +1,6 @@
 import React from 'react';
 import { GoogleApiWrapper, InfoWindow, Map, Marker } from 'google-maps-react';
-//import MapViewDirections from 'react-native-maps-directions';
+// import MapViewDirections from 'react-native-maps-directions';
 
 class GoogleMapsContainer extends React.Component {
   constructor(props) {
@@ -35,9 +35,9 @@ class GoogleMapsContainer extends React.Component {
       height: '75vh',
       align: 'center'
     }
-    // const origin = { latitude: this.props.trips.drop._lat, longitude: this.props.trips.drop._long };
-    // const destination = { latitude: this.props.vehicle.location._lat, longitude: this.props.vehicle.location._long };
-    // const api = 'AIzaSyBI_XexW7iE_FJv_1rPg7sADzmXQX5sXKs';
+    const origin = { latitude: this.props.trips.drop._lat, longitude: this.props.trips.drop._long };
+    const destination = { latitude: this.props.vehicle.location._lat, longitude: this.props.vehicle.location._long };
+    const api = 'AIzaSyBI_XexW7iE_FJv_1rPg7sADzmXQX5sXKs';
     var image = 'http://icons.iconarchive.com/icons/icons-land/transporter/48/Car-Right-Red-icon.png';
     return (
       <Map
@@ -62,6 +62,13 @@ class GoogleMapsContainer extends React.Component {
           position = {{ lat: this.props.vehicle.location._lat, lng: this.props.vehicle.location._long }}
           name = { this.props.vehicle.id }
         />
+   
+        {/* <MapViewDirections
+          origin={origin}
+          destination={destination}
+          apikey={api}
+         /> */}
+
         <InfoWindow
           marker = { this.state.activeMarker }
           visible = { this.state.showingInfoWindow }

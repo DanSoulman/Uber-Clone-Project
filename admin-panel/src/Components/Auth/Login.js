@@ -68,7 +68,7 @@ class Login extends Component{
                               <input 
                                 type="submit" 
                                 value="Login" 
-                                className="btn btn-primary btn-block" />
+                                className="btn btn-primary" />
                           </form>
                         </div>                    
                     </div>

@@ -63,7 +63,6 @@ import './TripDetails.css';
   render() {
       const {trip} = this.props;
       const {showBalanceUpdate, balanceUpdateAmount} = this.state;
-      console.log(this.props);
       let balanceForm = '';
       //if balance form should display
       if(showBalanceUpdate){
@@ -93,7 +92,6 @@ import './TripDetails.css';
             }
 
       if(trip&&this.props.vehicle&&this.props.user){
-          console.log(trip);
           var {user} = this.props;
           var {vehicle} = this.props;
           for(var i = 0; i<this.props.user.length; i++)
@@ -109,8 +107,6 @@ import './TripDetails.css';
                     break;
               }
           }
-          console.log(user);
-          console.log(vehicle);
           if(trip.Active==="False")
           {
                  return (

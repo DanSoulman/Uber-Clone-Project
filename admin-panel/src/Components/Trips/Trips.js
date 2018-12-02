@@ -28,7 +28,6 @@ import './Trips.css';
     render() {
       const {trips} = this.props ; 
       const {totalOwed} = this.state;
-      console.log(this.props);
       if(trips){/*Loading the table only if the trip info is retrieved from database */
         return (
             <div>

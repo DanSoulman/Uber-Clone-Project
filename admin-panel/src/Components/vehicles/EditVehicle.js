@@ -38,7 +38,6 @@ class EditVehicle extends Component{
             distance: this.distanceInput.current.value,
             maintenance: this.maintenanceInput
         }
-        console.log(updateVehicle);
         firestore.update({collection: 'Vehicles', doc: vehicle.id},
                          updateVehicle).then(history.push('/'));
 

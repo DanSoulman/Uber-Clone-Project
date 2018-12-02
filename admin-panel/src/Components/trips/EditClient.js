@@ -40,8 +40,6 @@ class EditClient extends Component{
    render() {
         const {user} = this.props;
          if(user){
-            console.log(user);
-            console.log(this.props);
             if(user.id === this.props.match.params.id)
                 return(
                     <div>

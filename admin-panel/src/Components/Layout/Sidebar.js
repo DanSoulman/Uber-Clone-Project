@@ -22,7 +22,6 @@ costSubmit = e => {
   e.preventDefault();
   
   const {settings, firestore} = this.props;
-  console.log(settings.id);
   const updateSettings = {
       costpermile: this.costInput.current.value
   }
@@ -32,9 +31,7 @@ costSubmit = e => {
 
   render(){
     const {user, settings, Vehicles} = this.props;
-    console.log(this.props);
     if(user && settings && Vehicles){
-      console.log(this.props);
 
       var top_user_index=0;
       var top_trips = 0;

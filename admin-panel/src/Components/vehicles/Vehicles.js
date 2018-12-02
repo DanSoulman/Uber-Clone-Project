@@ -11,7 +11,7 @@ import './Vehicle.css';
     render() {
       const {vehicle} = this.props ; 
       if(vehicle){/*Loading the table only if the Vehicle info is retrieved from database */
-        console.log(vehicle);
+
         return (
             <div>
                 <div className = "row">

@@ -14,7 +14,6 @@ import './VehicleDetails.css';
   render() {
       if(this.props.vehicle){
         const {vehicle} = this.props;
-        console.log(vehicle);
                return (
                     <div>
                         <div className="test">

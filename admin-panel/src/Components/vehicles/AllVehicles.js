@@ -35,11 +35,9 @@ class AllVehicles extends React.Component {
       height: '75vh',
       align: 'center'
     }
-    console.log(this.props);
     const {vehicle} = this.props.location.state; 
     if(vehicle){
       var image = 'http://icons.iconarchive.com/icons/icons-land/transporter/48/Car-Right-Red-icon.png';
-      console.log(vehicle);
       return (
         <Map
           item
