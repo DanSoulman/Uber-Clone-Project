@@ -12,6 +12,7 @@ import android.os.Message
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.NavigationView
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -39,6 +40,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.maps.DirectionsApiRequest
 import com.google.maps.GeoApiContext
@@ -47,6 +49,7 @@ import com.google.maps.model.DirectionsResult
 import kotlinx.android.synthetic.main.activity_homepage.*
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
@@ -96,6 +99,9 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
 
     lateinit var results : DirectionsResult
 
+    //-----------------------------------
+
+    final var DISTANCE_FOR_TRIP_TO_END = 30
     //-----------------------------------
 
 
@@ -205,11 +211,6 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         collectionReference
                 .whereEqualTo("email", fbAuth.currentUser!!.email)
                 .get()
-                .addOnSuccessListener {  }
-
-        collectionReference
-                .whereEqualTo("email", fbAuth.currentUser!!.email)
-                .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         for (document in task.result!!) {
@@ -260,6 +261,16 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
                 // Handle the camera action
             }
             R.id.nav_funds -> {
+
+                hideMap()
+
+                var fragM = PaymentFragment()
+
+                fragM.homepage = this
+
+                var fm = supportFragmentManager.beginTransaction()
+
+                fm.replace(R.id.framelay, fragM).commit()
 
             }
             R.id.nav_settings -> {
@@ -391,11 +402,23 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
     }
 
     @SuppressLint("RestrictedApi")
-    fun hideMap(){
+    fun hideButton(){
         //var viewMap = findViewById<View>(R.id.map)
         //viewMap.visibility = View.INVISIBLE
 
         //mMap.uiSettings.setMapToolbarEnabled(false)
+        mMap.uiSettings.setMyLocationButtonEnabled(false)
+
+        var fabButton = findViewById<FloatingActionButton>(R.id.placePicker)
+        fabButton.visibility = View.INVISIBLE
+    }
+
+    @SuppressLint("RestrictedApi")
+    fun hideMap(){
+        var viewMap = findViewById<View>(R.id.map)
+        viewMap.visibility = View.INVISIBLE
+
+        mMap.uiSettings.setMapToolbarEnabled(false)
         mMap.uiSettings.setMyLocationButtonEnabled(false)
 
         var fabButton = findViewById<FloatingActionButton>(R.id.placePicker)
@@ -415,7 +438,7 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
     fun fabOnClick(v : View){
         Log.d(TAG, "Fab Working")
 
-        hideMap()
+        hideButton()
 
         if(mMarker != null)
             mMarker!!.remove()
@@ -439,17 +462,48 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
 
     }
 
+    fun removeFragment(obj : Fragment){
+            supportFragmentManager.beginTransaction().remove(obj).commit()
+
+    }
+
     fun placeOrderCancelButton(v : View){
         supportFragmentManager.beginTransaction().remove(placeOrder).commit()
         showMap()
 
     }
 
-    fun returnOrder(view : View, order : Order){
+    fun waitForConfirmation(view : View, order : Order){
         this.orderObj = order
         this.results = placeOrder.result
 
+        var mMap : MutableMap<String, Any> = HashMap<String, Any>();
+        mMap.put("Active", false)
+        mMap.put("Date", order.timeStamp)
+        mMap.put("balance", order.cost)
+        mMap.put("drop", GeoPoint(order.destination.latitude, order.destination.longitude))
+        mMap.put("user", order.email)
+
+        dbRef.collection("Trips").add(mMap)
+
         placeOrderCancelButton(view)
+        createConfirmationView()
+    }
+
+    fun createConfirmationView(){
+        var fragM = waitForConfirmation()
+
+        fragM.order = this.orderObj
+
+        fragM.homepage = this
+
+        var fm = supportFragmentManager.beginTransaction()
+
+        fm.replace(R.id.framelay, fragM).commit()
+
+    }
+
+    fun returnOrder(){
 
         var polyList : MutableList<LatLng> = ArrayList<LatLng>()
 
@@ -460,13 +514,64 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         mPolyline = mMap.addPolyline((PolylineOptions())
                 .clickable(true).addAll(polyList).color(Color.BLUE).width(6f))
 
-        mMarker = mMap.addMarker(MarkerOptions().position(order.destination).title(order.destinationName))
-
+        mMarker = mMap.addMarker(MarkerOptions().position(orderObj.destination).title(orderObj.destinationName))
 
         var halfPoint : Int = polyList.size / 2
 
         moveCamera(polyList[halfPoint], 8f)
 
+        Thread(checkIfTripFinished()).start()
+
+    }
+
+    fun checkIfTripFinished() : Runnable{
+
+        var instanceOfSelf = this
+
+        return Runnable {
+            var finished = false
+
+            while(!finished){
+                if(distanceChecker(orderObj.source, orderObj.destination) < DISTANCE_FOR_TRIP_TO_END){
+                    finished = true
+                }
+                else
+                    Thread.sleep(5000)
+            }
+
+            instanceOfSelf.runOnUiThread() {
+                var fragM = TripFinished()
+
+                var fm = supportFragmentManager.beginTransaction()
+
+                fm.replace(R.id.framelay, fragM).commit()
+
+                //placeOrder = fragM
+            }
+
+        }
+    }
+
+    fun distanceChecker(source : LatLng, destination : LatLng) : Float{
+        return distance(source.latitude.toFloat(),
+                source.longitude.toFloat(),
+                destination.latitude.toFloat(),
+                destination.longitude.toFloat())
+    }
+
+    fun distance(lat_a: Float, lng_a: Float, lat_b: Float, lng_b: Float): Float {
+        val earthRadius = 3958.75
+        val latDiff = Math.toRadians((lat_b - lat_a).toDouble())
+        val lngDiff = Math.toRadians((lng_b - lng_a).toDouble())
+        val a = Math.sin(latDiff / 2) * Math.sin(latDiff / 2) + Math.cos(Math.toRadians(lat_a.toDouble())) * Math.cos(Math.toRadians(lat_b.toDouble())) *
+                Math.sin(lngDiff / 2) * Math.sin(lngDiff / 2)
+
+        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+        val distance = earthRadius * c
+
+        val meterConversion = 1609
+
+        return (distance * meterConversion).toFloat()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {

@@ -20,6 +20,9 @@ import com.google.android.gms.location.places.Place
 import com.google.android.gms.location.places.PlaceBuffer
 import com.google.android.gms.location.places.Places
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.maps.model.DirectionsResult
 import java.text.DecimalFormat
 import java.util.concurrent.atomic.AtomicBoolean
@@ -80,6 +83,13 @@ class PlacesOrder : Fragment(), GoogleApiClient.OnConnectionFailedListener {
 
     //---------------
 
+    //-----------Cost from the DB----------//
+    var costPerKM = 0.0;
+
+    var dbRef : FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    var collectionReference : CollectionReference = dbRef.collection("settings")
+
     companion object {
         val TAG = "Order Place Screen"
         val LAT_LNG_BOUNDS = LatLngBounds(LatLng(-40.00, -168.00), LatLng(71.00, 136.00))
@@ -87,6 +97,8 @@ class PlacesOrder : Fragment(), GoogleApiClient.OnConnectionFailedListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
+        retrieveCostPerKM()
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_places_order, container, false)
     }
@@ -146,7 +158,7 @@ class PlacesOrder : Fragment(), GoogleApiClient.OnConnectionFailedListener {
 
         confirmButton.setOnClickListener {
             if(!compareVal.equals(destinationView.text.toString()))
-                        homepage.returnOrder(it, order)
+                        homepage.waitForConfirmation(view, order)
 
             else
                 Toast.makeText(homepage,
@@ -155,6 +167,20 @@ class PlacesOrder : Fragment(), GoogleApiClient.OnConnectionFailedListener {
 
         }
 
+    }
+
+    private fun retrieveCostPerKM(){
+        collectionReference.orderBy("costperkm").get().addOnCompleteListener{
+
+            if(it.isSuccessful) {
+                for(document in it.result!!){
+                    costPerKM = document.data.getValue("costperkm").toString().toDouble()
+                }
+            }
+            else{
+                Log.d("RetrieveCostPerKM", "Error Retrieving Cost from FireStore")
+            }
+        }
     }
 
     fun splitString(mAddress : String) : String{
@@ -228,7 +254,7 @@ class PlacesOrder : Fragment(), GoogleApiClient.OnConnectionFailedListener {
 
         distance = result.routes[0].legs[0].distance.inMeters
 
-        cost = (distance / 1000) * 0.8
+        cost = (distance / 1000) * costPerKM
 
         val df = DecimalFormat("#.##")
 
@@ -238,9 +264,14 @@ class PlacesOrder : Fragment(), GoogleApiClient.OnConnectionFailedListener {
 
         destinationAddress = destinationView.text.toString()
 
+        var tStamp = Timestamp.now()
+
         order = Order(name, homepage.emailDisplay.text.toString(),
                 source, destination, destinationAddress,
-                sourceAddress, cost, distance)
+                sourceAddress, cost, distance, tStamp)
+
+        Log.i("ReturnTime", order.timeStamp.toString())
+        Log.i("ReturnTime", order.timeStamp.toDate().toString())
 
 
     }

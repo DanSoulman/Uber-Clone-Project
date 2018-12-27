@@ -22,19 +22,39 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 import kotlin.collections.ArrayList
 
+ /*
+ * This class runs when the program begins
+ * */
 
 class LogIn_GUI : AppCompatActivity() {
 
+    //The button we click to login
     lateinit var loginButton        : Button
+    //Field for entering email
     lateinit var emailTextField     : TextView
+    //Field for entering password
     lateinit var passwordTextField  : TextView
 
+    //The auth object used for getting the current user/signing people in
     private lateinit var fbAuth     : FirebaseAuth
+    //Instance of our connection to the database
     var dbRef: FirebaseFirestore = FirebaseFirestore.getInstance()
+    //Reference to a Users collection
     var collectionReference : CollectionReference = dbRef.collection("Users")
 
+    /*
+    Hash Map that will store any
+    information we wish to
+    push to the database
+     */
     var dataToSave : MutableMap<String, String> = HashMap<String, String>()
 
+    /*
+    Google sign in object,
+    allows us to sign in via
+    google account as opposed to
+    email
+     */
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             //.requestIdToken(getString(R.string.default_web_client_id))
             .requestIdToken("146078760213-01dddiigen9ds5a13it2qbokshd89jer.apps.googleusercontent.com")
@@ -43,13 +63,23 @@ class LogIn_GUI : AppCompatActivity() {
             .requestEmail()
             .build()
 
+    //Callback token
     private val RC_SIGN_IN = 1
 
+    //Tag used for logging
     companion object {
         var TAG = "MainActivity"
     }
 
-
+    /*
+    * When we start the application
+    * this is the first piece of our
+    * code that will run.
+    * First it binds the buttons and
+    * text fields
+    * Then it checks to see
+    * if there is a currently logged in user
+    * If there is we sign them out.*/
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in__gui)
@@ -60,6 +90,7 @@ class LogIn_GUI : AppCompatActivity() {
 
         fbAuth = FirebaseAuth.getInstance()
 
+        //If there's a user signed in, log them out
         if(fbAuth.currentUser != null){
             fbAuth.signOut()
         }
@@ -70,6 +101,16 @@ class LogIn_GUI : AppCompatActivity() {
         else Log.d(TAG, "currentUser is null")
     }
 
+    /*
+    * This function is called when the log in
+    * button is clicked.
+    * It checks to see if our text fields are empty
+    * by calling logInFieldsEmpty.
+    * If they aren't empty, it passes the email
+    * entered to an isEmailValid function
+    * which uses regex to make sure that an actual email
+    * has been entered. Then we pass the email and
+    * password to FireBaseSignIn*/
     fun logInHandler(v : View){
 
         if(logInFieldsEmpty() == false){
@@ -85,10 +126,22 @@ class LogIn_GUI : AppCompatActivity() {
 
     }
 
+    /*
+    * This function takes in an email
+    * and a password
+    * It then passes them into the signinwithemailandpassword
+    * function of the FireBase authentication service
+    *
+    * If the task is successful we set the returned user object
+    * to be the current user signed in
+    * And then we start the homepage activity*/
     private fun FireBaseSignIn(name : String, password : String) {
 
         fbAuth.signInWithEmailAndPassword(name, password).addOnCompleteListener(this) { task ->
-
+            /*
+            * If a user with that name and password exist we fall in here
+            * Where we start a new homepage activity
+            */
             if (task.isSuccessful) {
                 val user = fbAuth.currentUser
                 Log.d(TAG, "signInWithEmail:success")
@@ -114,6 +167,11 @@ class LogIn_GUI : AppCompatActivity() {
         }
     }
 
+    /*
+    * Simple Regex function to check if the email
+    * passed in is a valid email
+    * Returns true is valid
+    * false if it isnt*/
     private fun isEmailValid(email : String) : Boolean{
         var expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$"
         var pattern : Pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE)
@@ -122,6 +180,12 @@ class LogIn_GUI : AppCompatActivity() {
         return matcher.matches()
     }
 
+    /*
+    * Simple function that checks if the email
+    * or password fields are blank
+    * If either are it sets an error message
+    * pointing out now to leave the fields empty
+    * and then clears the text fields*/
     private fun logInFieldsEmpty() : Boolean{
 
         if(emailTextField.text.isBlank() || passwordTextField.text.isBlank()) {
@@ -138,6 +202,9 @@ class LogIn_GUI : AppCompatActivity() {
         return false
     }
 
+    /*
+    * Clears both text fields
+    */
     private fun clearText(){
 
         emailTextField.text = ""
@@ -145,6 +212,13 @@ class LogIn_GUI : AppCompatActivity() {
 
     }
 
+    /*
+    * This function is called
+    * when someone clicks the
+    * signUp text
+    * At which point it starts
+    * the signup activity
+    * */
     fun signUpHandler(v : View){
         var intent : Intent = Intent(this, SignUpController :: class.java)
         startActivity(intent)
@@ -205,12 +279,6 @@ class LogIn_GUI : AppCompatActivity() {
                                 .get()
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-                                        /*
-                                        for (document in task.result!!) {
-                                            Log.d(TAG, document.id + " => " + document.data)
-                                            //uName.text = document.data.getValue("name").toString()
-                                        }
-                                        */
 
                                         if(task.result!!.size() < 1){
 

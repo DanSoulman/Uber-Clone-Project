@@ -5,6 +5,7 @@ import android.os.Parcelable
 import com.google.android.gms.internal.measurement.zzsl.init
 import com.google.android.gms.maps.model.LatLng
 import com.google.api.Billing
+import com.google.firebase.Timestamp
 import java.io.Serializable
 
 class Order(){
@@ -22,6 +23,8 @@ class Order(){
 
     lateinit var sourceAddress: String
 
+    lateinit var timeStamp : Timestamp
+
     var distance : Long = 0
 
     var cost = 0.0
@@ -29,7 +32,7 @@ class Order(){
     constructor(name : String, email : String, source : LatLng,
                 destination: LatLng, destinationName : String,
                 sourceAddress : String, cost : Double,
-                distance : Long) : this() {
+                distance : Long, time : Timestamp) : this() {
 
         this.name   = name
 
@@ -46,6 +49,8 @@ class Order(){
         this.distance = distance
 
         this.cost = cost
+
+        this.timeStamp = time
 
     }
 
