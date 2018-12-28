@@ -63,11 +63,14 @@ class waitForConfirmation : Fragment() {
 
                                 for (document in it.result!!.documents) {
                                     if (order.timeStamp.toDate().equals(document.data!!.getValue("Date"))) {
-                                        if (document.data!!.getValue("Active").equals(true)) {
+                                        if (document.data!!.getValue("Active").equals(true) &&
+                                                !document.data!!.getValue("vehicle").equals(homepage.DEFAULT_VEHICLE_TAG)) {
                                             homepage.runOnUiThread() {
                                                 Log.d("Confirmation", "Trip Confirmed")
                                                 text.text = "Trip Confirmed"
                                             }
+                                            homepage.orderObj.vehicle = document.data!!.getValue("vehicle") as String
+
                                             finished = true
                                         } else {
                                             Log.d("Confirmation", "Active field not updated")
@@ -84,7 +87,8 @@ class waitForConfirmation : Fragment() {
                         homepage.runOnUiThread() {
                             Log.d("Confirmation", "Removing Order")
                             homepage.removeFragment(instanceOfSelf)
-                            homepage.returnOrder()
+                            //homepage.returnOrder()
+                            homepage.startVehicleFragment()
                         }
                     }
 

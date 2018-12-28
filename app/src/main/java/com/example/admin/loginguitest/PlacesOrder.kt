@@ -106,7 +106,7 @@ class PlacesOrder : Fragment(), GoogleApiClient.OnConnectionFailedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        source = homepage.getCurrentLocation()
+        source = homepage.getCurrentLocation(true)
 
         autoCompleteFragment = view.findViewById<AutoCompleteTextView>(R.id.input_search) as AutoCompleteTextView
 

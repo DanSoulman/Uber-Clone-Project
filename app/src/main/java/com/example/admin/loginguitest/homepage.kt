@@ -89,6 +89,8 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
 
     var mPolyline : Polyline? = null
 
+    var mVehicleMarker : Marker? = null
+
     //-----------------------------------
 
     //---------Data Class Objects--------
@@ -101,8 +103,10 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
 
     //-----------------------------------
 
+    //FINAL VALUES
     final var DISTANCE_FOR_TRIP_TO_END = 30
-    //-----------------------------------
+    final var DEFAULT_VEHICLE_TAG = "NO VEHICLE"
+    //----------------------------------
 
 
     companion object {
@@ -161,7 +165,7 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         var destin : com.google.maps.model.LatLng
                 = com.google.maps.model.LatLng(dest.latitude, dest.longitude)
 
-        var userLocation = getCurrentLocation()
+        var userLocation = getCurrentLocation(true)
 
         Log.d(TAG, "calculateDirections: calculating directions.")
 
@@ -286,7 +290,7 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         return true
     }
 
-    fun getCurrentLocation() : LatLng{
+    fun getCurrentLocation(starting : Boolean) : LatLng{
         currentLocationRetrieve = LocationServices.getFusedLocationProviderClient(this as AppCompatActivity)
 
         if(location == null){
@@ -300,7 +304,8 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
                     location = LatLng(it.latitude, it.longitude)
                 }
 
-                moveCamera(location!!, 15f)
+                if(starting)
+                    moveCamera(location!!, 15f)
 
                 if(it == null){
                     Log.d(TAG, "Location value is null")
@@ -332,7 +337,7 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
             lLocation = LatLng(mMap.myLocation.latitude, mMap.myLocation.longitude)
         }
         else{
-            lLocation = getCurrentLocation()
+            lLocation = getCurrentLocation(true)
         }
 
 
@@ -396,7 +401,7 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
 
         checkPermission()
 
-        getCurrentLocation()
+        getCurrentLocation(true)
 
 
     }
@@ -483,8 +488,10 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         mMap.put("balance", order.cost)
         mMap.put("drop", GeoPoint(order.destination.latitude, order.destination.longitude))
         mMap.put("user", order.email)
+        mMap.put("vehicle", DEFAULT_VEHICLE_TAG)
 
         dbRef.collection("Trips").add(mMap)
+
 
         placeOrderCancelButton(view)
         createConfirmationView()
@@ -528,12 +535,63 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
 
         var instanceOfSelf = this
 
+        var location = mMap.myLocation
+
         return Runnable {
             var finished = false
 
             while(!finished){
-                if(distanceChecker(orderObj.source, orderObj.destination) < DISTANCE_FOR_TRIP_TO_END){
+
+                instanceOfSelf.runOnUiThread(){location = mMap.myLocation}
+
+                if(distanceChecker(LatLng(location.latitude, location.longitude), orderObj.destination) < DISTANCE_FOR_TRIP_TO_END){
                     finished = true
+
+                    dbRef.collection("Users")
+                            .whereEqualTo("email", fbAuth.currentUser!!.email)
+                            .get().addOnCompleteListener {
+                        if(it.isSuccessful){
+                            Log.d("Trip Completed", "Balance Updated")
+                            var documentReference = it.result!!.documents[0].id
+
+                            var stringBalance = it.result!!.documents[0].data!!.getValue("balance")
+                            var balance = 0.0
+
+                            if(stringBalance is Double)
+                                balance = stringBalance
+
+                            else if(stringBalance is String)
+                                balance = stringBalance.toDouble()
+
+                            balance -= orderObj.cost
+
+                            if(orderObj.cost == 0.0)
+                                balance -= 1
+
+                            var tripsObj = it.result!!.documents[0].data!!.getValue("trips")
+
+                            var tripsCount = 0
+                            if(tripsObj is String)
+                                tripsCount = tripsObj.toInt()
+
+                            else if(tripsObj is Int)
+                                tripsCount = tripsObj
+
+                            tripsCount++
+
+                            var mutableMap : MutableMap<String, Any> = HashMap<String, Any>()
+                            mutableMap.put("balance", balance.toString())
+                            mutableMap.put("trips", tripsCount.toString())
+
+                            dbRef.collection("Users").document(documentReference).update(mutableMap)
+
+                            mutableMap = HashMap<String, Any>()
+                            mutableMap.put("active", false)
+
+                            dbRef.collection("Vehicles").document(orderObj.vehicle).update(mutableMap)
+
+                        }
+                    }
                 }
                 else
                     Thread.sleep(5000)
@@ -542,11 +600,12 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
             instanceOfSelf.runOnUiThread() {
                 var fragM = TripFinished()
 
+                fragM.mInstanceOfhomepage = instanceOfSelf
+
                 var fm = supportFragmentManager.beginTransaction()
 
                 fm.replace(R.id.framelay, fragM).commit()
 
-                //placeOrder = fragM
             }
 
         }
@@ -581,12 +640,74 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
                     try{
                         mMap.isMyLocationEnabled = true
                         mMap.uiSettings.isMyLocationButtonEnabled = true
-                        moveCamera(getCurrentLocation(), 50f)
+                        moveCamera(getCurrentLocation(true), 50f)
                     }
                     catch(e : SecurityException){ Log.d(TAG, e.message)}
                 }
             }
         }
+    }
+
+    fun startVehicleFragment() {
+        var fragM = VehicleArrivingFragment()
+        fragM.mVehicleAssigned = orderObj.vehicle
+        fragM.mInstanceOfhomepage = this
+
+        hideButton()
+
+        var fm = supportFragmentManager.beginTransaction()
+
+        fm.replace(R.id.framelay, fragM).commit()
+
+
+    }
+
+    fun vehicleArrived(obj : Any, regNum : String) {
+        if(obj is Fragment)
+            removeFragment(obj)
+
+        mVehicleMarker!!.remove()
+        mVehicleMarker = null
+
+        var fragM = VehicleArrived()
+        fragM.mInstanceOfHomepage = this
+        fragM.mRegistrationNumber = regNum
+
+        var fm = supportFragmentManager.beginTransaction()
+
+        fm.replace(R.id.framelay, fragM).commit()
+
+    }
+
+    fun startRatingFragment(obj: Any) {
+        if(obj is Fragment)
+            removeFragment(obj)
+
+        var fragM = RateUs()
+        fragM.mInstanceOfhomepage = this
+
+        var fm = supportFragmentManager.beginTransaction()
+        fm.replace(R.id.framelay, fragM).commit()
+    }
+
+    fun resetState() {
+        if(mVehicleMarker != null){
+            mVehicleMarker!!.remove()
+            mVehicleMarker = null
+        }
+
+        if(mPolyline != null){
+            mPolyline!!.remove()
+            mPolyline = null
+        }
+
+        if(mMarker != null){
+            mMarker!!.remove()
+            mMarker = null
+        }
+
+        showMap()
+
     }
 
     var mHandler : Handler = object : Handler(Looper.getMainLooper()){

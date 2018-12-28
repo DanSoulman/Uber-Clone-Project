@@ -6,41 +6,65 @@
     tools:context=".TripFinished">
 
         <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:id="@+id/tripFinishedLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/tripFinishedLayout">
+            android:layout_width="300dp"
+            android:layout_height="270dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/common_google_signin_btn_icon_light_normal_background">
 
-            <RelativeLayout
-                android:layout_width="300dp"
-                android:layout_height="200dp"
-                android:layout_centerInParent="true"
-                android:background="@drawable/common_google_signin_btn_icon_light_normal_background">
+            <TextView
+                android:id="@+id/textViewTripFin1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:text="Destination Reached"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:text="Destination Reached" />
 
-                <TextView
-                    android:id="@+id/textViewTripFin1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="15dp"
-                    android:text="Destination Reached"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    tools:text="Destination Reached" />
+            <TextView
+                android:id="@+id/textViewTripFin2"
+                android:layout_width="233dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewTripFin1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="18dp"
+                android:text="You have arrived at your destination,\n\nwe have deducted the cost of the trip from your account.\n\nWe would appreciate it greatly if you rate your experience\n\nThank you for travelling with TransportAI"
+                android:textAlignment="center"
+                tools:text="You have arrived at your destination,\n\nwe have deducted the cost of the trip from your account.\n\nWe would appreciate it greatly if you rate your experience\n\nThank you for travelling with TransportAI" />
 
-                <TextView
-                    android:id="@+id/textViewTripFin2"
-                    android:layout_width="233dp"
-                    android:layout_height="104dp"
-                    android:layout_below="@+id/textViewTripFin1"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:text="You have arrived at your destination,\nwe have deducted the cost of the trip from your account.\n\nThank you for travelling with TransportAI"
-                    android:textAlignment="center"
-                    tools:text="You have arrived at your destination,\nwe have deducted the cost of the trip from your account.\n\nThank you for travelling with TransportAI" />
+            <Button
+                android:id="@+id/tripFinButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textViewTripFin2"
+                android:layout_alignEnd="@id/textViewTripFin2"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/button_bg_rounded_corners_red"
+                android:text="Finish"
+                android:textColor="@color/common_google_signin_btn_text_dark_default"
+                tools:text="Finish" />
 
-            </RelativeLayout>
+            <Button
+                android:id="@+id/RateUsButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textViewTripFin2"
+                android:layout_alignStart="@id/textViewTripFin2"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/button_bg_rounded_corners"
+                android:text="Rate Us"
+                android:textColor="@color/common_google_signin_btn_text_dark_default"
+                tools:text="Rate Us" />
+
         </RelativeLayout>
+    </RelativeLayout>
 </FrameLayout>

@@ -273,7 +273,6 @@ class LogIn_GUI : AppCompatActivity() {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success")
                         val user = fbAuth.currentUser
-
                         collectionReference
                                 .whereEqualTo("email", user!!.email)
                                 .get()

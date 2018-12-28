@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".VehicleArrivingFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <RelativeLayout
+        android:id="@+id/vehicle_arriving_rel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="250dp"
+            android:layout_height="95dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/common_google_signin_btn_icon_dark_normal_background">
+
+            <TextView
+                android:id="@+id/textView26"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="Estimated Time till Arrival"
+                tools:text="Estimated Time till Arrival" />
+
+            <TextView
+                android:id="@+id/time_till_arrival"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView26"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="00:00"
+                android:textColor="@color/colorPrimary"
+                android:textSize="30sp"
+                tools:text="00:00" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/vehicle_arriving_rel2"
+            android:layout_width="230dp"
+            android:layout_height="95dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/common_google_signin_btn_icon_dark_normal_background">
+
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="Vehicle Registration"
+                tools:text="Vehicle Registration" />
+
+            <TextView
+                android:id="@+id/registration_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView22"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="T12-A5-928"
+                android:textColor="@color/colorPrimary"
+                android:textSize="30sp"
+                tools:text="T12-A5-928" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="88dp"
+            android:layout_height="95dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/common_google_signin_btn_icon_dark_normal_background">
+
+            <TextView
+                android:id="@+id/textView24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="Rating"
+                tools:text="Rating" />
+
+            <TextView
+                android:id="@+id/rating_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView24"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="3"
+                android:textColor="@color/colorPrimary"
+                android:textSize="30sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+</FrameLayout>

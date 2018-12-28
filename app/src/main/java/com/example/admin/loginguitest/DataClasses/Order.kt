@@ -25,6 +25,8 @@ class Order(){
 
     lateinit var timeStamp : Timestamp
 
+    lateinit var vehicle : String
+
     var distance : Long = 0
 
     var cost = 0.0

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RateUs">
+
+    <RelativeLayout
+        android:id="@+id/RateUsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="300dp"
+            android:layout_height="230dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/common_google_signin_btn_icon_light_normal_background">
+
+            <TextView
+                android:id="@+id/rateUsHeading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:text="Rate Your Experience"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:text="Rate Your Experience" />
+
+            <TextView
+                android:id="@+id/rateUsText"
+                android:layout_width="233dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rateUsHeading"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="18dp"
+                android:text="Did you enjoy your trip with TransportAI?"
+                android:textAlignment="center"
+                tools:text="Did you enjoy your trip with TransportAI?" />
+
+            <ImageView
+                android:id="@+id/thumbUp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_below="@id/rateUsText"
+                android:layout_alignStart="@+id/rateUsText"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/thumb" />
+
+            <ImageView
+                android:id="@+id/thumbDown"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_below="@id/rateUsText"
+                android:layout_alignEnd="@+id/rateUsText"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/thumb2" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+</FrameLayout>
