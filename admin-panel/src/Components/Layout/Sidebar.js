@@ -23,7 +23,7 @@ costSubmit = e => {
   
   const {settings, firestore} = this.props;
   const updateSettings = {
-      costpermile: this.costInput.current.value
+      costperkm: this.costInput.current.value
   }
   //Update in Firestore
   firestore.update({collection: 'settings', doc: settings[0].id},updateSettings);
@@ -85,14 +85,14 @@ costSubmit = e => {
                 <form onSubmit={this.costSubmit}>
                  <div className="input-group">
                   <label htmlFor="registration" className="align">
-                      <h5><i class="fas fa-hand-holding-usd"></i> Cost Per Mile </h5></label>
+                      <h5><i class="fas fa-hand-holding-usd"></i> Cost Per Km </h5></label>
                       <input 
                           type = "text"
                           className="form-control"
                           name="costeUpdateAmount"
                           required
                           ref = {this.costInput}
-                          defaultValue = {settings[0].costpermile}
+                          defaultValue = {settings[0].costperkm}
                           >
                       </input>
                       </div>

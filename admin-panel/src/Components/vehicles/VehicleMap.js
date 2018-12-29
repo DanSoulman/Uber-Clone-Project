@@ -1,6 +1,7 @@
 import React from 'react';
 import { GoogleApiWrapper, InfoWindow, Map, Marker } from 'google-maps-react';
 
+
 class VehicleMap extends React.Component {
   constructor(props) {
     super(props);

@@ -62,10 +62,10 @@ import './Trips.css';
                             <tr key={trip.id}>
                                 <td><Timestamp time={trip.Date.seconds} format='full' /></td>
                                 <td>{trip.drop._lat} {trip.drop._long}</td>
-                                 <td>{trip.Active}</td>
-                                 <td>{trip.balance}</td>
+                                 <td>{trip.Active.toString()}</td>
+                                 <td>{trip.balance.toString()}</td>
                                 <td>
-                                    <Link to={`/trip/${trip.id}`}
+                                    <Link to={{pathname:`/trip/${trip.id}`, state:{trip: trip}}}
                                     className="btn btn-secondary btn-sm">
                                         <i className="fas fa-arrow-circle-right"></i> Details
                                     </Link>

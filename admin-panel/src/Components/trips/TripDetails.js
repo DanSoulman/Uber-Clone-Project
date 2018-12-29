@@ -31,22 +31,28 @@ import './TripDetails.css';
   onButtonClick = f => {
       f.preventDefault();
 
-      const {trip, firestore} = this.props;
+      const {trip} = this.props;
+      const {firestore} = this.props;
       var {tripStatus} = trip.Active; 
+      var {activeStatus} = {};
       if(trip){
-        if (trip.Active==="False"){
+        if (trip.Active===false){
             tripStatus = {
-                Active: "True"
+                Active: true
             };
-            firestore
-            .update({collection: 'Trips', doc: trip.id}, tripStatus );
+            firestore.update({collection: 'Trips', doc: trip.id}, tripStatus );
         }
         else{
             tripStatus = {
-                Active: "False"
+                Active: false
+            };
+            activeStatus = {
+                active: false
             };
             firestore
             .update({collection: 'Trips', doc: trip.id}, tripStatus);
+            firestore
+            .update({collecton: 'Vehicles', doc:trip.vehicle}, activeStatus);
         }
     }
     else{
@@ -55,10 +61,32 @@ import './TripDetails.css';
 
       
    };
+
+   updateVehicle(vehicle){
+       var {activeStatus} = vehicle.active;
+       var {vehicleInfo} = vehicle.id;
+       const {trip} = this.props;
+       if(trip.Active===false){
+            activeStatus = {
+                active: false
+            };
+        }
+        else{
+            activeStatus = {
+                active: true
+            };
+        }
+        vehicleInfo = {
+            vehicle: vehicle.id
+        };
+        const {firestore} = this.props;
+        firestore
+        .update({collection: 'Vehicles', doc: vehicle.id}, activeStatus);
+        firestore
+        .update({collection: 'Trips', doc: trip.id}, vehicleInfo);
+   }
   
   onChange = e => this.setState({[e.target.name]: e.target.value});
-
-
 
   render() {
       const {trip} = this.props;
@@ -94,6 +122,8 @@ import './TripDetails.css';
       if(trip&&this.props.vehicle&&this.props.user){
           var {user} = this.props;
           var {vehicle} = this.props;
+          var vehicles = null;
+          console.log(this.props);
           for(var i = 0; i<this.props.user.length; i++)
           {
               if(this.props.user[i].email === trip.user){
@@ -101,14 +131,27 @@ import './TripDetails.css';
                     break;
               }
           }
-          for(i=0; i<this.props.vehicle.length; i++){
-              if(this.props.vehicle[i].id === trip.vehicle._key.path.segments[6]){
-                    vehicle = this.props.vehicle[i];
+          if(trip.vehicle !== "NO VEHICLE")
+            for(i=0; i<this.props.vehicle.length; i++){
+                if(this.props.vehicle[i].id === trip.vehicle){
+                        vehicles = this.props.vehicle[i];
+                        break;
+                }
+            if(trip.Active===false)
+                this.updateVehicle(vehicles);
+          }
+          else{
+              for(i=0;i<this.props.vehicle.length; i++){
+                  if(this.props.vehicle[i].active === false && this.props.vehicle[i].maintenance === "false"){
+                    vehicles = this.props.vehicle[i];
+                    this.updateVehicle(vehicles);
                     break;
+                  }
               }
           }
-          if(trip.Active==="False")
+          if(trip.Active===false)
           {
+            console.log(trip.Active);
                  return (
                     <div>
                         <div className="test">
@@ -183,31 +226,31 @@ import './TripDetails.css';
                             <div className="row">
                                 <div className="col-md-8 col-sm-6 align">
                                     <h4>
-                                        Car Info:{' '} <span className="text-secondary">{vehicle.id}</span>
+                                        Car Info:{' '} <span className="text-secondary">{vehicles.id}</span>
                                     </h4> 
                                 </div>
                                 <div className="col-md-4 col-sm-6 align">
                                     <h4 className="pull-right">
                                        Needs Maintenance?: <span className={classnames({
-                                            'text-danger':vehicle.maintenance==="false",
-                                            'text-success': vehicle.maintenance === "true"
-                                        })}>{vehicle.maintenance.toUpperCase()}</span>
+                                            'text-danger':vehicles.maintenance==="false",
+                                            'text-success': vehicles.maintenance === "true"
+                                        })}>{vehicles.maintenance.toUpperCase()}</span>
                                     </h4>
                                 </div>
                             </div>
 
                             <hr />
                             <ul className="list-group">
-                                <li className="list-group-item align"><strong>Registration: {vehicle.registration}</strong></li>
-                                <li className="list-group-item align"><strong>Make: {vehicle.make}</strong></li>
-                                <li className="list-group-item align"><strong>Model: {vehicle.model}</strong></li>
+                                <li className="list-group-item align"><strong>Registration: {vehicles.registration}</strong></li>
+                                <li className="list-group-item align"><strong>Make: {vehicles.make}</strong></li>
+                                <li className="list-group-item align"><strong>Model: {vehicles.model}</strong></li>
                             </ul>
                         </div>
                         <div className="row">
                             <div className="col-md-12 col-sm-6 align">
                             <Maps 
                                 trips={trip}
-                                vehicle={vehicle}
+                                vehicle={vehicles}
                                 user={user}
                             />
                         </div> 
@@ -291,18 +334,18 @@ import './TripDetails.css';
                                 <div className="col-md-4 col-sm-6 align">
                                     <h4 className="pull-right">
                                         Needs Maintenance?: <span className={classnames({
-                                            'text-danger':vehicle.maintenance==="false",
-                                            'text-success': vehicle.maintenance === "true"
-                                        })}>{vehicle.maintenance.toUpperCase()}</span>
+                                            'text-danger':vehicles.maintenance==="false",
+                                            'text-success': vehicles.maintenance === "true"
+                                        })}>{vehicles.maintenance.toUpperCase()}</span>
                                     </h4>
                                 </div>
                             </div>
 
                             <hr />
                             <ul className="list-group">
-                                <li className="list-group-item align"><strong>Registration: {vehicle.registration}</strong></li>
-                                <li className="list-group-item align"><strong>Make: {vehicle.make}</strong></li>
-                                <li className="list-group-item align"><strong>Model: {vehicle.model}</strong></li>
+                                <li className="list-group-item align"><strong>Registration: {vehicles.registration}</strong></li>
+                                <li className="list-group-item align"><strong>Make: {vehicles.make}</strong></li>
+                                <li className="list-group-item align"><strong>Model: {vehicles.model}</strong></li>
                             </ul>
 
 
@@ -311,7 +354,7 @@ import './TripDetails.css';
                         <div className="col-md-12 col-sm-6 align">
                         <Maps 
                             trips={trip}
-                            vehicle={vehicle}
+                            vehicle={vehicles}
                             user={user}
                         />
                         </div> 

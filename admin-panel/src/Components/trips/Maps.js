@@ -35,9 +35,8 @@ class GoogleMapsContainer extends React.Component {
       height: '75vh',
       align: 'center'
     }
-    const origin = { latitude: this.props.trips.drop._lat, longitude: this.props.trips.drop._long };
-    const destination = { latitude: this.props.vehicle.location._lat, longitude: this.props.vehicle.location._long };
-    const api = 'AIzaSyBI_XexW7iE_FJv_1rPg7sADzmXQX5sXKs';
+    console.log(this.props);
+
     var image = 'http://icons.iconarchive.com/icons/icons-land/transporter/48/Car-Right-Red-icon.png';
     return (
       <Map
