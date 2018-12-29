@@ -54,6 +54,7 @@ dependencies {
 
     //Stripe payments
     implementation 'com.stripe:stripe-android:6.1.2'
+    implementation 'com.stripe:stripe-java:5.36.0'
 
 
 }

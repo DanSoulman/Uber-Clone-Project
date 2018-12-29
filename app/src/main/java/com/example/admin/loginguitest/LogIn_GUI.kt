@@ -145,7 +145,7 @@ class LogIn_GUI : AppCompatActivity() {
             if (task.isSuccessful) {
                 val user = fbAuth.currentUser
                 Log.d(TAG, "signInWithEmail:success")
-                Toast.makeText(baseContext, "Success.",
+                Toast.makeText(baseContext, "Success",
                         Toast.LENGTH_SHORT).show()
 
                 Thread.sleep(1000)
@@ -158,7 +158,7 @@ class LogIn_GUI : AppCompatActivity() {
 
             } else {
                 Log.w(TAG, "signInWithEmail:failure", task.exception)
-                Toast.makeText(baseContext, "Authentication failed.",
+                Toast.makeText(baseContext, "Authentication failed",
                         Toast.LENGTH_SHORT).show()
 
             }
@@ -220,8 +220,22 @@ class LogIn_GUI : AppCompatActivity() {
     * the signup activity
     * */
     fun signUpHandler(v : View){
-        var intent : Intent = Intent(this, SignUpController :: class.java)
+        var signInFrag = SignUpFragment()
+        signInFrag.mInstanceOfLogIn_GUI = this
+
+        hideBackground()
+
+        var fm = supportFragmentManager.beginTransaction()
+        fm.replace(R.id.mobileOverlay, signInFrag)
+                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                .commit()
+    }
+
+    fun startHomepage(){
+        var intent : Intent = Intent(this, homepage :: class.java)
         startActivity(intent)
+        finish()
+
     }
 
     //LOGGING IN THROUGH GOOGLE PLUS --------------------------------------------
@@ -310,6 +324,7 @@ class LogIn_GUI : AppCompatActivity() {
                                             Log.d("QueryDB", "Task succeeded user already exists")
                                             var intent = Intent(this, homepage::class.java)
                                             startActivity(intent)
+                                            finish()
                                         }
                                     } else {
                                         Log.d("QueryDB", "Error getting documents: ", task.exception)
@@ -326,6 +341,26 @@ class LogIn_GUI : AppCompatActivity() {
                     }
 
                 }
+    }
+
+    fun hideBackground(){
+        emailTextField.visibility = View.INVISIBLE
+        passwordTextField.visibility = View.INVISIBLE
+        loginButton.visibility = View.INVISIBLE
+
+        var heading : TextView = findViewById(R.id.transport_ai_heading)
+        heading.visibility = View.INVISIBLE
+
+        var image = findViewById<ImageView>(R.id.googleSignIn)
+        image.visibility = View.INVISIBLE
+
+
+    }
+
+    fun showBackground(){
+        emailTextField.visibility = View.INVISIBLE
+        passwordTextField.visibility = View.INVISIBLE
+        loginButton.visibility = View.INVISIBLE
     }
 
 }

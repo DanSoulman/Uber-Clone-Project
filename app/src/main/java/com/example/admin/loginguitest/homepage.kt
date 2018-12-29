@@ -2,6 +2,7 @@ package com.example.admin.loginguitest
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Geocoder
@@ -14,6 +15,7 @@ import android.support.design.widget.NavigationView
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.IntentCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBar
@@ -108,6 +110,7 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
     final var DEFAULT_VEHICLE_TAG = "NO VEHICLE"
     //----------------------------------
 
+    var fragmentStack = Stack<Fragment>()
 
     companion object {
         val TAG = "HOMEPAGE"
@@ -262,7 +265,9 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_call -> {
-                // Handle the camera action
+                removeFragment(fragmentStack.pop())
+                revealMap()
+
             }
             R.id.nav_funds -> {
 
@@ -272,16 +277,18 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
 
                 fragM.homepage = this
 
+                fragmentStack.push(fragM)
+
                 var fm = supportFragmentManager.beginTransaction()
 
                 fm.replace(R.id.framelay, fragM).commit()
 
             }
-            R.id.nav_settings -> {
-
-            }
-            R.id.nav_support -> {
-
+            R.id.log_out -> {
+                var intent = Intent(this, LogIn_GUI :: class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent);
+                finish()
             }
 
         }
@@ -440,6 +447,16 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
         fabButton.visibility = View.VISIBLE
     }
 
+    fun revealMap(){
+        var viewMap = findViewById<View>(R.id.map)
+        viewMap.visibility = View.VISIBLE
+
+        mMap.uiSettings.setMapToolbarEnabled(true)
+        mMap.uiSettings.setMyLocationButtonEnabled(true)
+
+        var fabButton = findViewById<FloatingActionButton>(R.id.placePicker)
+        fabButton.visibility = View.VISIBLE
+    }
     fun fabOnClick(v : View){
         Log.d(TAG, "Fab Working")
 
