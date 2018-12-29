@@ -52,7 +52,7 @@ import './TripDetails.css';
             firestore
             .update({collection: 'Trips', doc: trip.id}, tripStatus);
             firestore
-            .update({collecton: 'Vehicles', doc:trip.vehicle}, activeStatus);
+            .update({collecton: 'vehicle', doc:trip.vehicle}, activeStatus);
         }
     }
     else{
@@ -97,7 +97,7 @@ import './TripDetails.css';
 
       if(this.props.trip&&this.props.vehicle&&this.props.user){
           var {user} = this.props;
-          var vehicles = null;
+          var vehicle;
           console.log(this.props);
           for(var i = 0; i<this.props.user.length; i++)
           {
@@ -109,20 +109,20 @@ import './TripDetails.css';
           if(trip.vehicle !== "NO VEHICLE")
             for(i=0; i<this.props.vehicle.length; i++){
                 if(this.props.vehicle[i].id === trip.vehicle){
-                        vehicles = this.props.vehicle[i];
+                        vehicle = this.props.vehicle[i];
                         break;
                 }
           }
           else{
               for(i=0;i<this.props.vehicle.length; i++){
                   if(this.props.vehicle[i].active === false && this.props.vehicle[i].maintenance === "false"){
-                    vehicles = this.props.vehicle[i];
+                    vehicle = this.props.vehicle[i];
                     break;
                   }
               }
           }
-          var {activeStatus} = vehicles.active;
-          var {vehicleInfo} = vehicles.id;
+          var {activeStatus} = vehicle.active;
+          var {vehicleInfo} = vehicle.id;
             if(trip.Active===false){
                 activeStatus = {
                     active: false
@@ -134,11 +134,11 @@ import './TripDetails.css';
                 };
             }
         vehicleInfo = {
-            vehicle: vehicles.id
+            vehicle: vehicle.id
         };
         const {firestore} = this.props;
         firestore
-        .update({collection: 'Vehicles', doc: vehicles.id}, activeStatus);
+        .update({collection: 'Vehicles', doc: vehicle.id}, activeStatus);
         firestore
         .update({collection: 'Trips', doc: trip.id}, vehicleInfo);
           if(trip.Active===false)
@@ -154,6 +154,10 @@ import './TripDetails.css';
                             </div>  
                             <div className="col-md-6">
                             <div className="btn-group float-right">
+                                <Link to={{pathname:`/customer/contact/${user.id}`, state:{user: user}}}
+                                      className="btn btn-info">
+                                      Contact
+                                </Link>
                                 <Link to={`/trip/edit/${user.id}`} className="btn btn-dark">
                                     Edit
                                 </Link>
@@ -218,31 +222,31 @@ import './TripDetails.css';
                             <div className="row">
                                 <div className="col-md-8 col-sm-6 align">
                                     <h4>
-                                        Car Info:{' '} <span className="text-secondary">{vehicles.id}</span>
+                                        Car Info:{' '} <span className="text-secondary">{vehicle.id}</span>
                                     </h4> 
                                 </div>
                                 <div className="col-md-4 col-sm-6 align">
                                     <h4 className="pull-right">
                                        Needs Maintenance?: <span className={classnames({
-                                            'text-danger':vehicles.maintenance==="false",
-                                            'text-success': vehicles.maintenance === "true"
-                                        })}>{vehicles.maintenance.toUpperCase()}</span>
+                                            'text-danger':vehicle.maintenance==="false",
+                                            'text-success': vehicle.maintenance === "true"
+                                        })}>{vehicle.maintenance.toUpperCase()}</span>
                                     </h4>
                                 </div>
                             </div>
 
                             <hr />
                             <ul className="list-group">
-                                <li className="list-group-item align"><strong>Registration: {vehicles.registration}</strong></li>
-                                <li className="list-group-item align"><strong>Make: {vehicles.make}</strong></li>
-                                <li className="list-group-item align"><strong>Model: {vehicles.model}</strong></li>
+                                <li className="list-group-item align"><strong>Registration: {vehicle.registration}</strong></li>
+                                <li className="list-group-item align"><strong>Make: {vehicle.make}</strong></li>
+                                <li className="list-group-item align"><strong>Model: {vehicle.model}</strong></li>
                             </ul>
                         </div>
                         <div className="row">
                             <div className="col-md-12 col-sm-6 align">
                             <Maps 
                                 trips={trip}
-                                vehicle={vehicles}
+                                vehicle={vehicle}
                                 user={user}
                             />
                         </div> 
@@ -262,6 +266,10 @@ import './TripDetails.css';
                             </div>  
                             <div className="col-md-6">
                             <div className="btn-group float-right">
+                                <Link to={{pathname:`/customer/contact/${user.id}`, state:{user: user}}}
+                                      className="btn btn-info">
+                                      Contact
+                                </Link>
                                 <Link to={`/trip/edit/${user.id}`} className="btn btn-dark">
                                     Edit
                                 </Link>
@@ -320,24 +328,24 @@ import './TripDetails.css';
                             <div className="test">
                                 <div className="col-md-8 col-sm-6 align">
                                     <h4>
-                                        Car Info:{' '} <span className="text-secondary">{vehicles.id}</span>
+                                        Car Info:{' '} <span className="text-secondary">{vehicle.id}</span>
                                     </h4> 
                                 </div>
                                 <div className="col-md-4 col-sm-6 align">
                                     <h4 className="pull-right">
                                         Needs Maintenance?: <span className={classnames({
-                                            'text-danger':vehicles.maintenance==="false",
-                                            'text-success': vehicles.maintenance === "true"
-                                        })}>{vehicles.maintenance.toUpperCase()}</span>
+                                            'text-danger':vehicle.maintenance==="false",
+                                            'text-success': vehicle.maintenance === "true"
+                                        })}>{vehicle.maintenance.toUpperCase()}</span>
                                     </h4>
                                 </div>
                             </div>
 
                             <hr />
                             <ul className="list-group">
-                                <li className="list-group-item align"><strong>Registration: {vehicles.registration}</strong></li>
-                                <li className="list-group-item align"><strong>Make: {vehicles.make}</strong></li>
-                                <li className="list-group-item align"><strong>Model: {vehicles.model}</strong></li>
+                                <li className="list-group-item align"><strong>Registration: {vehicle.registration}</strong></li>
+                                <li className="list-group-item align"><strong>Make: {vehicle.make}</strong></li>
+                                <li className="list-group-item align"><strong>Model: {vehicle.model}</strong></li>
                             </ul>
 
 
@@ -346,7 +354,7 @@ import './TripDetails.css';
                         <div className="col-md-12 col-sm-6 align">
                         <Maps 
                             trips={trip}
-                            vehicle={vehicles}
+                            vehicle={vehicle}
                             user={user}
                         />
                         </div> 
