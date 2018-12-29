@@ -69,6 +69,7 @@ import './VehicleDetails.css';
                             <hr />
 
                             <ul className="list-group">
+                                <li className="list-group-item align"><strong>Active: {vehicle.active.toString().toUpperCase()}</strong></li>
                                 <li className="list-group-item align"><strong>Registration: {vehicle.registration}</strong></li>
                                 <li className="list-group-item align"><strong>Make: {vehicle.make}</strong></li>
                                 <li className="list-group-item align"><strong>Model: {vehicle.model}</strong></li>
