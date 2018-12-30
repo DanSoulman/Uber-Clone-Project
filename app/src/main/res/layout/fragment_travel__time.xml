@@ -5,10 +5,72 @@
     android:layout_height="match_parent"
     tools:context=".Travel_Time">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
+        android:id="@+id/vehicle_arriving_rel"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="250dp"
+            android:layout_height="95dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/common_google_signin_btn_icon_dark_normal_background">
+
+            <TextView
+                android:id="@+id/textView26"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="Estimated Time till Arrival"
+                tools:text="Estimated Time till Arrival" />
+
+            <TextView
+                android:id="@+id/time_till_arrival_destination"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView26"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="00:00"
+                android:textColor="@color/colorPrimary"
+                android:textSize="30sp"
+                tools:text="00:00" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/vehicle_arriving_rel2"
+            android:layout_width="230dp"
+            android:layout_height="95dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/common_google_signin_btn_icon_dark_normal_background">
+
+            <TextView
+                android:id="@+id/distance_heading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="Distance to Destination"
+                tools:text="Distance to Destination" />
+
+            <TextView
+                android:id="@+id/distance_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/distance_heading"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="400km"
+                android:textColor="@color/colorPrimary"
+                android:textSize="30sp"
+                tools:text="400km" />
+        </RelativeLayout>
+    </RelativeLayout>
 
 </FrameLayout>

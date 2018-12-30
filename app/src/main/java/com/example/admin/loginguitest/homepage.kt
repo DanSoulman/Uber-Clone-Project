@@ -544,7 +544,16 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
 
         moveCamera(polyList[halfPoint], 8f)
 
-        Thread(checkIfTripFinished()).start()
+        //Thread(checkIfTripFinished()).start()
+
+        var fragM = Travel_Time()
+        fragM.mInstanceOfhomepage = this
+
+        fragmentStack.push(fragM)
+
+        var fm = supportFragmentManager.beginTransaction()
+        fm.replace(R.id.framelay, fragM).commit()
+        hideButton()
 
     }
 
@@ -615,6 +624,7 @@ class homepage : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
             }
 
             instanceOfSelf.runOnUiThread() {
+
                 var fragM = TripFinished()
 
                 fragM.mInstanceOfhomepage = instanceOfSelf
