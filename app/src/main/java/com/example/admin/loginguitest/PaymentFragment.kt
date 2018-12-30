@@ -14,9 +14,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.functions.R.id.text
 
 import com.stripe.android.Stripe
 import com.stripe.android.TokenCallback
@@ -56,6 +59,8 @@ class PaymentFragment : Fragment() {
     var dbRef = FirebaseFirestore.getInstance()
 
     var collectionReference : CollectionReference = dbRef.collection("Users")
+
+    private var functions: FirebaseFunctions = FirebaseFunctions.getInstance()
 
     /*-------------------------------------*/
     /*-----------Stripe Objects-----------*/
@@ -167,6 +172,8 @@ class PaymentFragment : Fragment() {
         mCard!!.name = billingName.text.toString()
         mCard!!.addressLine1 = billingAddress.text.toString()
 
+        createStripeToken()
+
     }
 
     fun createStripeToken(){
@@ -175,18 +182,10 @@ class PaymentFragment : Fragment() {
         mStripe!!.createToken(mCard!!, object : TokenCallback {
 
                     override fun onSuccess(token : Token) {
-
+                        //sendToken(token)
                         // Send token to your server
-                        var chargeDetails : MutableMap<String, Any> = HashMap<String, Any>()
-                        chargeDetails.put("amount", topUpValue.text.toString().toDouble())
-                        chargeDetails.put("currency", "eur")
-                        chargeDetails.put("description", "TransportAI Account TopUp")
-                        chargeDetails.put("source", token)
-                        chargeDetails.put("card", token.id);
+                        localCharge(token)
 
-                        var charge = Charge.create(chargeDetails)
-
-                        Toast.makeText(homepage, "Charge, successfully applied", Toast.LENGTH_SHORT)
                     }
 
                     override fun onError(error : Exception) {
@@ -201,6 +200,86 @@ class PaymentFragment : Fragment() {
 
     }
 
+    private fun localCharge(token: Token) {
+        var cost = topUpValue.text.toString().toDouble()
+        var amount : Int = (cost * 100).toInt()
+        var chargeDetails : MutableMap<String, Any> = HashMap<String, Any>()
+        chargeDetails.put("amount", amount)
+        chargeDetails.put("currency", "eur")
+        chargeDetails.put("description", "TransportAI Account TopUp")
+        //chargeDetails.put("source", token)
+        chargeDetails.put("card", token.id);
+
+        var runnable = Runnable {
+            com.stripe.Stripe.apiKey = getString(R.string.stripe_private_key)
+            var charge = Charge.create(chargeDetails)
+
+            dbRef.collection("Users")
+                    .whereEqualTo("email", fbAuth.currentUser!!.email)
+                    .get().addOnCompleteListener {
+                if(it.isSuccessful){
+                    var document = it.result!!.documents[0].id
+
+                    var resultVal = it.result!!.documents[0].data!!.getValue("balance")
+
+                    var balance = 0.0
+                    if(resultVal is String)
+                        balance = resultVal.toDouble()
+
+                    else
+                        balance = resultVal as Double
+
+                    balance += cost
+
+                    var dataToSave = hashMapOf<String, Any>(
+                            "balance" to balance
+                    )
+
+                    dbRef.collection("Users").document(document).update(dataToSave)
+
+                    homepage.runOnUiThread(){
+                        clearText()
+                        currentBalanceView.text = "€" + balance.toString()
+                        accountBalanceAfterView.text = "€" + "0.0"
+
+                    }
+                    Toast.makeText(homepage, "Charge, successfully applied", Toast.LENGTH_SHORT).show()
+
+                }
+            }
+        }
+
+        Thread(runnable).start()
+    }
+
+    private fun sendToken(token: Token) : Task<Toast> {
+        //var data : MutableMap<String, Any> = HashMap<String, Any>()
+
+        var cost : Double = topUpValue.text.toString().toDouble()
+        var amount : Int = (cost * 100).toInt()
+
+        //data.put("card", token.id);
+        //data.put("amount", amount)
+
+        val data = hashMapOf(
+                "card" to token.id,
+                "amount" to amount
+        )
+
+        return functions.getHttpsCallable("stripeCharge").call(data).continueWith {
+
+            Log.d(TAG, "Function called")
+            if(it.isSuccessful) {
+                Log.d(TAG, "Success")
+                Toast.makeText(homepage, "Charge, successfully applied", Toast.LENGTH_SHORT)
+            }
+            else
+                Toast.makeText(homepage, "Charge, failed", Toast.LENGTH_SHORT)
+
+        }
+
+    }
+
     fun hideKeyboard(activity : Activity) {
         var imm = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         var view = activity.getCurrentFocus();
@@ -210,5 +289,12 @@ class PaymentFragment : Fragment() {
         }
 
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    fun clearText(){
+        billingName.text.clear()
+        billingAddress.text.clear()
+        topUpValue.text.clear()
+        mCardInputWidget.clear()
     }
 }

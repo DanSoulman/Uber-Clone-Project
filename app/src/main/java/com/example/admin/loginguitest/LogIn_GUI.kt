@@ -194,7 +194,7 @@ class LogIn_GUI : AppCompatActivity() {
             else if (emailTextField.text.isBlank())
                 emailTextField.setError("Please do not leave Email Field Empty")
             else
-                passwordTextField.setError("Please do not Password Field Empty")
+                passwordTextField.setError("Please do not leave Password Field Empty")
 
             clearText()
         }

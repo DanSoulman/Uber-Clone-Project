@@ -44,13 +44,13 @@ class RateUs : Fragment() {
                 .get()
                 .addOnCompleteListener {
             if(it.isSuccessful){
-                if(it.result!!.data!!.getValue("positive counter") != null){
-                    var stringCounter = it.result!!.data!!.getValue("positive counter") as String
+                if(it.result!!.data!!.getValue("positiveCounter") != null){
+                    var stringCounter = it.result!!.data!!.getValue("positiveCounter") as String
                     var positiveCounter = stringCounter.toInt()
                     positiveCounter += 1
 
                     var tempMap : MutableMap<String, Any> = HashMap<String, Any>()
-                    tempMap.put("positive counter", positiveCounter.toString())
+                    tempMap.put("positiveCounter", positiveCounter.toString())
 
                     dbRef.collection("Vehicles").document(it.result!!.id).update(tempMap)
                     endFragment()
@@ -65,13 +65,13 @@ class RateUs : Fragment() {
                 .get()
                 .addOnCompleteListener {
                     if(it.isSuccessful){
-                        if(it.result!!.data!!.getValue("positive counter") != null){
-                            var stringCounter = it.result!!.data!!.getValue("negative counter") as String
+                        if(it.result!!.data!!.getValue("negativeCounter") != null){
+                            var stringCounter = it.result!!.data!!.getValue("negativeCounter") as String
                             var negativeCounter = stringCounter.toInt()
                             negativeCounter += 1
 
                             var tempMap : MutableMap<String, Any> = HashMap<String, Any>()
-                            tempMap.put("negative counter", negativeCounter.toString())
+                            tempMap.put("negativeCounter", negativeCounter.toString())
 
                             dbRef.collection("Vehicles").document(it.result!!.id).update(tempMap)
                             endFragment()

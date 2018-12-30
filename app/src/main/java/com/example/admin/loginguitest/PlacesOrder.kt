@@ -167,6 +167,17 @@ class PlacesOrder : Fragment(), GoogleApiClient.OnConnectionFailedListener {
 
         }
 
+        dbRef.collection("Users")
+                .whereEqualTo("email", homepage.emailDisplay.text.toString())
+                .get().addOnCompleteListener {
+
+                    if(it.isSuccessful){
+                        homepage.runOnUiThread{
+                            balanceView.text = "€" + it.result!!.documents[0].data!!.getValue("balance") as String
+                        }
+                    }
+        }
+
     }
 
     private fun retrieveCostPerKM(){
