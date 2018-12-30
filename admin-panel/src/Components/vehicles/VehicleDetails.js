@@ -14,7 +14,29 @@ import './VehicleDetails.css';
   render() {
       if(this.props.vehicle){
         const {vehicle} = this.props;
-               return (
+        for(var i = 0; i<vehicle.length; ){
+            var ratings = (parseInt(vehicle.positiveCounter) + parseInt(vehicle.negativeCounter))/2
+            var rating;
+            const {firestore} = this.props;
+            if(ratings < 0){
+                rating = {
+                    rating: "2.5"
+                };
+            }
+            else{
+                ratings = ratings * 5/2 + 3.0
+                rating = {
+                    rating: ratings
+                };
+            }
+            firestore.update(
+                {
+                    collections: "Vehicles",
+                    doc: vehicle.id
+                },
+                rating);
+        }
+        return (
                     <div>
                         <div className="test">
 

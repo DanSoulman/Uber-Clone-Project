@@ -1,0 +1,10 @@
+{
+  "name": "stripe-functions",
+  "description": "Cloud Functions for Stripe",
+  "dependencies": {
+    "firebase-admin": "~6.0.0",
+    "firebase-functions": "^2.1.0",
+    "stripe": "^4.25.0"
+  },
+  "private": true
+}
