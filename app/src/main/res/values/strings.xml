@@ -10,6 +10,7 @@
     <string name="title_activity_confirm_order">Confirm Order</string>
     <string name="google_maps_key">AIzaSyAd2R1rT8L7h5vOZpDHsnuEMSteFVL9Kdk</string>
     <string name="stripe_token_key">pk_test_Atpn0RyXC0DE1bs7vHu9YHek</string>
+    <string name="stripe_private_key">sk_test_2iPTGHgpQd6zljOnqX2dJhqs</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
