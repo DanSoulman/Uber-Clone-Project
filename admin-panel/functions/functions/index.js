@@ -6,7 +6,7 @@ admin.initializeApp(functions.config().firebase);
 const stripe = require('stripe')(functions.config().stripe.token)
 
 exports.stripeCharge = functions.database
-                                .ref('/Users/{userId}/{balance}')
+                                .ref('/Users/{userId}/')
                                 .onWrite(event => {
 
 const payment = event.data.val();
@@ -20,7 +20,7 @@ return admin.database()
                 return snapshot.val();
             })
             .then(customer => {
-                const amount = payment.amount;
+                const amount = payment.balance;
                 const idempotency_key = paymentId;
                 const source = payment.token.id;
                 const currency = 'usd';
@@ -36,5 +36,5 @@ return admin.database()
             })
 
 
-                                })
+     })
 
